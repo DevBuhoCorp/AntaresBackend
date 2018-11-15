@@ -14,3 +14,8 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+
+$router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router) {
+
+});
