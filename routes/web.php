@@ -18,9 +18,9 @@ $router->get('/', function () use ($router) {
 
 $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router) {
 
-    //Area
+    //Área
     $router->get('area', ["uses" => "AreaController@index"]);
-    $router->get('area_combo', ["uses" => "AreaController@combo"]);
+    $router->get('area_combo/{id}', ["uses" => "AreaController@combo"]);
     $router->get('area/{id}', ['uses' => 'AreaController@show']);
     $router->post('area', ['uses' => 'AreaController@store']);
     $router->put('area/{id}', ['uses' => 'AreaController@update']);
@@ -34,8 +34,7 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->delete('departamento/{id}', ['uses' => 'DepartamentoController@destroy']);
     $router->get('departamento_combo', ["uses" => "DepartamentoController@combo"]);
 
-    
-
+    //Cargo  
     $router->get('cargo', ["uses" => "CargoController@index"]);
     $router->get('cargo_combo', ["uses" => "CargoController@combo"]);
     $router->get('cargo/{id}', ['uses' => 'CargoController@show']);
@@ -43,6 +42,7 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->put('cargo/{id}', ['uses' => 'CargoController@update']);
     $router->delete('cargo/{id}', ['uses' => 'CargoController@destroy']);
 
+    //Colaborador
     $router->get('colaborador', ["uses" => "ColaboradorController@index"]);
     $router->get('colaborador/{id}', ['uses' => 'ColaboradorController@show']);
     $router->post('colaborador', ['uses' => 'ColaboradorController@store']);

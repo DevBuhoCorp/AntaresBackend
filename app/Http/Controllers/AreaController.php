@@ -7,6 +7,19 @@ use App\Models\Area;
 
 class AreaController extends Controller
 {
+
+    public function combo($id)
+    {
+        try {
+            $area = Area::where('Estado', 'ACT')
+                ->where('IDDepartamento', $id)
+                ->get(['ID', 'Descripcion']);
+            return response()->json($area, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,14 +30,14 @@ class AreaController extends Controller
         try {
             if ($request->isJson()) {
                 $area = Area::join('departamento', 'IDDepartamento', '=', 'departamento.ID')
-                ->select('area.ID','area.Descripcion','departamento.Descripcion as Departamento','area.Estado')
-                ->paginate($request->input('psize'));
+                    ->select('area.ID', 'area.Descripcion', 'departamento.Descripcion as Departamento', 'area.Estado')
+                    ->paginate($request->input('psize'));
                 return response()->json($area, 200);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
-        }   
+        }
     }
 
     /**
