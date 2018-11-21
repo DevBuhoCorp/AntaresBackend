@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 21 Nov 2018 15:32:37 +0000.
+ * Date: Wed, 21 Nov 2018 19:46:48 +0000.
  */
 
 namespace App\Models;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @property int $IDDepartamento
  * 
  * @property \App\Models\Departamento $departamento
- * @property \Illuminate\Database\Eloquent\Collection $colaboradors
+ * @property \Illuminate\Database\Eloquent\Collection $areacolabs
  * @property \Illuminate\Database\Eloquent\Collection $ordenpedidos
  *
  * @package App\Models
@@ -44,9 +44,9 @@ class Area extends Eloquent
 		return $this->belongsTo(\App\Models\Departamento::class, 'IDDepartamento');
 	}
 
-	public function colaboradors()
+	public function areacolabs()
 	{
-		return $this->hasMany(\App\Models\Colaborador::class, 'IDArea');
+		return $this->hasMany(\App\Models\Areacolab::class, 'IdArea');
 	}
 
 	public function ordenpedidos()

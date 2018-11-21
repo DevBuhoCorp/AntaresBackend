@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 21 Nov 2018 15:32:37 +0000.
+ * Date: Wed, 21 Nov 2018 19:46:49 +0000.
  */
 
 namespace App\Models;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @property bool $Autorizar
  * @property string $Estado
  * 
- * @property \Illuminate\Database\Eloquent\Collection $colaboradors
+ * @property \Illuminate\Database\Eloquent\Collection $areacolabs
  *
  * @package App\Models
  */
@@ -37,8 +37,8 @@ class Cargo extends Eloquent
 		'Estado'
 	];
 
-	public function colaboradors()
+	public function areacolabs()
 	{
-		return $this->hasMany(\App\Models\Colaborador::class, 'IDCargo');
+		return $this->hasMany(\App\Models\Areacolab::class, 'IdCargo');
 	}
 }

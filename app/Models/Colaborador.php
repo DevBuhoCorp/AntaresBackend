@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 21 Nov 2018 15:32:37 +0000.
+ * Date: Wed, 21 Nov 2018 19:46:49 +0000.
  */
 
 namespace App\Models;
@@ -19,11 +19,8 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @property string $ApellidoMaterno
  * @property string $Cedula
  * @property string $Estado
- * @property int $IDCargo
- * @property int $IDArea
  * 
- * @property \App\Models\Cargo $cargo
- * @property \App\Models\Area $area
+ * @property \Illuminate\Database\Eloquent\Collection $areacolabs
  *
  * @package App\Models
  */
@@ -33,29 +30,17 @@ class Colaborador extends Eloquent
 	protected $primaryKey = 'ID';
 	public $timestamps = false;
 
-	protected $casts = [
-		'IDCargo' => 'int',
-		'IDArea' => 'int'
-	];
-
 	protected $fillable = [
 		'NombrePrimero',
 		'NombreSegundo',
 		'ApellidoPaterno',
 		'ApellidoMaterno',
 		'Cedula',
-		'Estado',
-		'IDCargo',
-		'IDArea'
+		'Estado'
 	];
 
-	public function cargo()
+	public function areacolabs()
 	{
-		return $this->belongsTo(\App\Models\Cargo::class, 'IDCargo');
-	}
-
-	public function area()
-	{
-		return $this->belongsTo(\App\Models\Area::class, 'IDArea');
+		return $this->hasMany(\App\Models\Areacolab::class, 'IdColaborador');
 	}
 }
