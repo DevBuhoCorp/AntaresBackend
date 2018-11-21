@@ -18,7 +18,15 @@ $router->get('/', function () use ($router) {
 
 $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router) {
 
+    //Area
+    $router->get('area', ["uses" => "AreaController@index"]);
+    $router->get('area_combo', ["uses" => "AreaController@combo"]);
+    $router->get('area/{id}', ['uses' => 'AreaController@show']);
+    $router->post('area', ['uses' => 'AreaController@store']);
+    $router->put('area/{id}', ['uses' => 'AreaController@update']);
+    $router->delete('area/{id}', ['uses' => 'AreaController@destroy']);
 
+    //Departamento
     $router->get('departamento', ["uses" => "DepartamentoController@index"]);
     $router->get('departamento/{id}', ['uses' => 'DepartamentoController@show']);
     $router->post('departamento', ['uses' => 'DepartamentoController@store']);
@@ -26,12 +34,7 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->delete('departamento/{id}', ['uses' => 'DepartamentoController@destroy']);
     $router->get('departamento_combo', ["uses" => "DepartamentoController@combo"]);
 
-    $router->get('area', ["uses" => "AreaController@index"]);
-    $router->get('area_combo', ["uses" => "AreaController@combo"]);
-    $router->get('area/{id}', ['uses' => 'AreaController@show']);
-    $router->post('area', ['uses' => 'AreaController@store']);
-    $router->put('area/{id}', ['uses' => 'AreaController@update']);
-    $router->delete('area/{id}', ['uses' => 'AreaController@destroy']);
+    
 
     $router->get('cargo', ["uses" => "CargoController@index"]);
     $router->get('cargo_combo', ["uses" => "CargoController@combo"]);
