@@ -52,5 +52,40 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->put('colaborador/{id}', ['uses' => 'ColaboradorController@update']);
     $router->delete('colaborador/{id}', ['uses' => 'ColaboradorController@destroy']);
 
+    $router->get('contribuyente', ["uses" => "ContribuyenteController@index"]);
+    $router->get('contribuyente/{id}', ['uses' => 'ContribuyenteController@show']);
+    $router->post('contribuyente', ['uses' => 'ContribuyenteController@store']);
+    $router->put('contribuyente/{id}', ['uses' => 'ContribuyenteController@update']);
+    $router->delete('contribuyente/{id}', ['uses' => 'ContribuyenteController@destroy']);
+    $router->get('contribuyente_combo', ["uses" => "ContribuyenteController@combo"]);
+
+
+    $router->get('tipoemisor', ["uses" => "TipoEmisorController@index"]);
+    $router->get('tipoemisor/{id}', ['uses' => 'TipoEmisorController@show']);
+    $router->post('tipoemisor', ['uses' => 'TipoEmisorController@store']);
+    $router->put('tipoemisor/{id}', ['uses' => 'TipoEmisorController@update']);
+    $router->delete('tipoemisor/{id}', ['uses' => 'TipoEmisorController@destroy']);
+    $router->get('tipoemisor_combo', ["uses" => "TipoEmisorController@combo"]);
+
+    $router->get('tipoidentificacion', ["uses" => "TipoIdentificacionController@index"]);
+    $router->get('tipoidentificacion/{id}', ['uses' => 'TipoIdentificacionController@show']);
+    $router->post('tipoidentificacion', ['uses' => 'TipoIdentificacionController@store']);
+    $router->put('tipoidentificacion/{id}', ['uses' => 'TipoIdentificacionController@update']);
+    $router->delete('tipoidentificacion/{id}', ['uses' => 'TipoIdentificacionController@destroy']);
+    $router->get('tipoidentificacion_combo', ["uses" => "TipoIdentificacionController@combo"]);
+
+    $router->get('proveedor', ["uses" => "ProveedorController@index"]);
+    $router->get('proveedor/{id}', ['uses' => 'ProveedorController@show']);
+    $router->post('proveedor', ['uses' => 'ProveedorController@store']);
+    $router->put('proveedor/{id}', ['uses' => 'ProveedorController@update']);
+    $router->delete('proveedor/{id}', ['uses' => 'ProveedorController@destroy']);
+
+
+// Presupuesto
+    $router->get('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@show"]);
+    $router->post('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@store"]);
+
+
+
 
 });
