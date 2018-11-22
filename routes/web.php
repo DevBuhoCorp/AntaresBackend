@@ -44,8 +44,11 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
 
     //Colaborador
     $router->get('colaborador', ["uses" => "ColaboradorController@index"]);
+    $router->get('colaboradorarea', ["uses" => "ColaboradorController@colaboradorarea"]);
     $router->get('colaborador/{id}', ['uses' => 'ColaboradorController@show']);
+    $router->get('colaboradorareashow/{id}', ['uses' => 'ColaboradorController@colaboradorareashow']);
     $router->post('colaborador', ['uses' => 'ColaboradorController@store']);
+    $router->put('colaboradorarea/{id}', ['uses' => 'ColaboradorController@colaboradorareaupd']);
     $router->put('colaborador/{id}', ['uses' => 'ColaboradorController@update']);
     $router->delete('colaborador/{id}', ['uses' => 'ColaboradorController@destroy']);
 
