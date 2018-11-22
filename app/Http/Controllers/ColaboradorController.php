@@ -24,6 +24,7 @@ class ColaboradorController extends Controller
                     ->join('cargo as cg', 'ac.IdCargo', '=', 'cg.ID')
                     ->join('area as a', 'ac.IdArea', '=', 'a.ID')
                     ->join('departamento as d', 'a.IDDepartamento', '=', 'd.ID')
+                    ->whereNull('ac.FechaFin')
                     ->select(DB::raw("CONCAT(colaborador.NombrePrimero,' ',colaborador.ApellidoPaterno) as Nombre"), 'colaborador.Cedula', 'ac.FechaInicio', 'a.Descripcion as Area', 'd.Descripcion as Departamento', 'cg.Descripcion as Cargo', 'colaborador.Estado', 'colaborador.ID')
                     ->paginate($request->input('psize'));
                 return response()->json($colaborador, 200);
