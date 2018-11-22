@@ -78,6 +78,11 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->delete('proveedor/{id}', ['uses' => 'ProveedorController@destroy']);
 
 
+// Presupuesto
+    $router->get('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@show"]);
+    $router->post('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@store"]);
+
+
 
 
 });

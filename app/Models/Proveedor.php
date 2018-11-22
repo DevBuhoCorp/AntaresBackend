@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @property string $Celular
  * @property string $AutorizacionSRI
  * @property string $Email
+ * @property string $Direccion
  * @property string $Estado
  * 
  * @property \App\Models\Tipoidentificacion $tipoidentificacion
@@ -52,6 +53,7 @@ class Proveedor extends Eloquent
 		'Celular',
 		'AutorizacionSRI',
 		'Email',
+		'Direccion',
 		'Estado'
 	];
 
