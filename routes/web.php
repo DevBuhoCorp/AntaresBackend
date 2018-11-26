@@ -16,7 +16,7 @@ $router->get('/', function () use ($router) {
 });
 
 
-$router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router) {
+$router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Área
     $router->get('area', ["uses" => "AreaController@index"]);
@@ -25,6 +25,24 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->post('area', ['uses' => 'AreaController@store']);
     $router->put('area/{id}', ['uses' => 'AreaController@update']);
     $router->delete('area/{id}', ['uses' => 'AreaController@destroy']);
+    #endregion
+
+    #region Pais
+    $router->get('pais', ["uses" => "PaisController@index"]);
+    $router->get('pais_combo', ["uses" => "PaisController@combo"]);
+    $router->get('pais/{id}', ['uses' => 'PaisController@show']);
+    $router->post('pais', ['uses' => 'PaisController@store']);
+    $router->put('pais/{id}', ['uses' => 'PaisController@update']);
+    $router->delete('pais/{id}', ['uses' => 'PaisController@destroy']);
+    #endregion
+
+    #region Ciudad
+    $router->get('ciudad', ["uses" => "CiudadController@index"]);
+    $router->get('ciudad_combo', ["uses" => "CiudadController@combo"]);
+    $router->get('ciudad/{id}', ['uses' => 'CiudadController@show']);
+    $router->post('ciudad', ['uses' => 'CiudadController@store']);
+    $router->put('ciudad/{id}', ['uses' => 'CiudadController@update']);
+    $router->delete('ciudad/{id}', ['uses' => 'CiudadController@destroy']);
     #endregion
 
     #region Departamento
@@ -36,7 +54,7 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->get('departamento_combo', ["uses" => "DepartamentoController@combo"]);
     #endregion
 
-    #region Cargo  
+    #region Cargo
     $router->get('cargo', ["uses" => "CargoController@index"]);
     $router->get('cargo_combo', ["uses" => "CargoController@combo"]);
     $router->get('cargo/{id}', ['uses' => 'CargoController@show']);
@@ -114,6 +132,22 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     #endregion
 
 
+    //Bodega
+    $router->get('bodega', ["uses" => "BodegaController@index"]);
+//    $router->get('bodega_combo', ["uses" => "BodegaController@combo"]);
+    $router->get('bodega/{id}', ['uses' => 'BodegaController@show']);
+    $router->post('bodega', ['uses' => 'BodegaController@store']);
+    $router->put('bodega/{id}', ['uses' => 'BodegaController@update']);
+    $router->delete('bodega/{id}', ['uses' => 'BodegaController@destroy']);
+
+
+    // Tipo Movimiento
+    $router->get('tipomovimiento', ["uses" => "TipoMovimientoController@index"]);
+    $router->get('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@show']);
+    $router->post('tipomovimiento', ['uses' => 'TipoMovimientoController@store']);
+    $router->put('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@update']);
+    $router->delete('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@destroy']);
+    $router->get('tipomovimiento_combo', ["uses" => "TipoMovimientoController@combo"]);
 
 
 });
