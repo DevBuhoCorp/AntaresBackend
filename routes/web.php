@@ -84,6 +84,7 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->delete('tipoemisor/{id}', ['uses' => 'TipoEmisorController@destroy']);
     $router->get('tipoemisor_combo', ["uses" => "TipoEmisorController@combo"]);
 
+    // Tipo Identificacion
     $router->get('tipoidentificacion', ["uses" => "TipoIdentificacionController@index"]);
     $router->get('tipoidentificacion/{id}', ['uses' => 'TipoIdentificacionController@show']);
     $router->post('tipoidentificacion', ['uses' => 'TipoIdentificacionController@store']);
@@ -110,6 +111,15 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->post('bodega', ['uses' => 'BodegaController@store']);
     $router->put('bodega/{id}', ['uses' => 'BodegaController@update']);
     $router->delete('bodega/{id}', ['uses' => 'BodegaController@destroy']);
+
+
+    // Tipo Movimiento
+    $router->get('tipomovimiento', ["uses" => "TipoMovimientoController@index"]);
+    $router->get('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@show']);
+    $router->post('tipomovimiento', ['uses' => 'TipoMovimientoController@store']);
+    $router->put('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@update']);
+    $router->delete('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@destroy']);
+    $router->get('tipomovimiento_combo', ["uses" => "TipoMovimientoController@combo"]);
 
 
 
