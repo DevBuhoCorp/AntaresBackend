@@ -14,14 +14,13 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * 
  * @property int $ID
  * @property \Carbon\Carbon $FechaRegistro
- * @property int $IdArea
- * @property int $IdUsers
  * @property string $Estado
  * @property string $Observacion
  * @property int $IDAutorizado
  * @property \Carbon\Carbon $FechaAutorizacion
+ * @property int $IDAreaColab
  * 
- * @property \App\Models\Area $area
+ * @property \App\Models\Areacolab $areacolab
  * @property \Illuminate\Database\Eloquent\Collection $detalleops
  *
  * @package App\Models
@@ -33,9 +32,8 @@ class Ordenpedido extends Eloquent
 	public $timestamps = false;
 
 	protected $casts = [
-		'IdArea' => 'int',
-		'IdUsers' => 'int',
-		'IDAutorizado' => 'int'
+		'IDAutorizado' => 'int',
+		'IDAreaColab' => 'int'
 	];
 
 	protected $dates = [
@@ -45,17 +43,16 @@ class Ordenpedido extends Eloquent
 
 	protected $fillable = [
 		'FechaRegistro',
-		'IdArea',
-		'IdUsers',
 		'Estado',
 		'Observacion',
 		'IDAutorizado',
-		'FechaAutorizacion'
+		'FechaAutorizacion',
+		'IDAreaColab'
 	];
 
-	public function area()
+	public function areacolab()
 	{
-		return $this->belongsTo(\App\Models\Area::class, 'IdArea');
+		return $this->belongsTo(\App\Models\Areacolab::class, 'IDAreaColab');
 	}
 
 	public function detalleops()

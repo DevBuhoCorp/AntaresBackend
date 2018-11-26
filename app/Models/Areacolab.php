@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @property \App\Models\Area $area
  * @property \App\Models\Colaborador $colaborador
  * @property \App\Models\Cargo $cargo
+ * @property \Illuminate\Database\Eloquent\Collection $ordenpedidos
  *
  * @package App\Models
  */
@@ -65,5 +66,10 @@ class Areacolab extends Eloquent
 	public function cargo()
 	{
 		return $this->belongsTo(\App\Models\Cargo::class, 'IdCargo');
+	}
+
+	public function ordenpedidos()
+	{
+		return $this->hasMany(\App\Models\Ordenpedido::class, 'IDAreaColab');
 	}
 }

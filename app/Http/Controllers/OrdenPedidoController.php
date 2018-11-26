@@ -6,6 +6,7 @@ use App\Models\Detalleop;
 use App\Models\Ordenpedido;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\Areacolab;
 
 class OrdenPedidoController extends Controller
 {
@@ -44,7 +45,12 @@ class OrdenPedidoController extends Controller
                 $opedido->FechaRegistro = $carbon->toDateString();
                 $opedido->Estado = ($request->input('Estado'));
                 $opedido->Observacion = ($request->input('Observacion'));
-                $opedido->IdUsers = $request->user()->id;
+                //return $request->user();
+                $areacolab = Areacolab::join('colaborador as c','c.ID','areacolab.IdColaborador')
+                ->where('c.IDUsers',$request->user()->id)
+                ->get(['areacolab.ID'])[0];
+
+                $opedido->IDAreaColab = $areacolab;
 
                 $opedido->save();
                 foreach ($request->all()['Detalles'] as $detalle) {
