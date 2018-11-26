@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Detalleop;
-use App\Models\Ordenpedido;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\Item;
 
-class OrdenPedidoController extends Controller
+class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            if ($request->isJson()) {
+                $item = Item::paginate($request->input('psize'));
+                return response()->json($item, 200);
+            }
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**
@@ -37,28 +43,7 @@ class OrdenPedidoController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            if ($request->isJson()) {
-                $carbon = new Carbon($request->input('FechaRegistro'));
-                $opedido = new Ordenpedido();
-                $opedido->FechaRegistro = $carbon->toDateString();
-                $opedido->Estado = ($request->input('Estado'));
-                $opedido->Observacion = ($request->input('Observacion'));
-                $opedido->IdUsers = $request->user()->id;
-
-                $opedido->save();
-                foreach ($request->all()['Detalles'] as $detalle) {
-                    $detalle = new Detalleop($detalle);
-                    $detalle->IdOPedido = $opedido->ID;
-                    $detalle->save();
-                }
-
-                return response()->json(true, 201);
-            }
-            return response()->json(['error' => 'Unauthorized'], 401);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => $e], 500);
-        }
+        //
     }
 
     /**
