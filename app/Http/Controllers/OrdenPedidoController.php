@@ -44,8 +44,9 @@ class OrdenPedidoController extends Controller
                 $opedido->FechaRegistro = $carbon->toDateString();
                 $opedido->Estado = ($request->input('Estado'));
                 $opedido->Observacion = ($request->input('Observacion'));
-                $opedido->save();
+                $opedido->IdUsers = $request->user()->id;
 
+                $opedido->save();
                 foreach ($request->all()['Detalles'] as $detalle) {
                     $detalle = new Detalleop($detalle);
                     $detalle->IdOPedido = $opedido->ID;
