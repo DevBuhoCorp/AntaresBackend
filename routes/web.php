@@ -26,6 +26,23 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->put('area/{id}', ['uses' => 'AreaController@update']);
     $router->delete('area/{id}', ['uses' => 'AreaController@destroy']);
 
+    //Pais
+    $router->get('pais', ["uses" => "PaisController@index"]);
+    $router->get('pais_combo', ["uses" => "PaisController@combo"]);
+    $router->get('pais/{id}', ['uses' => 'PaisController@show']);
+    $router->post('pais', ['uses' => 'PaisController@store']);
+    $router->put('pais/{id}', ['uses' => 'PaisController@update']);
+    $router->delete('pais/{id}', ['uses' => 'PaisController@destroy']);
+
+    //Ciudad
+    $router->get('ciudad', ["uses" => "CiudadController@index"]);
+    $router->get('ciudad_combo', ["uses" => "CiudadController@combo"]);
+    $router->get('ciudad/{id}', ['uses' => 'CiudadController@show']);
+    $router->post('ciudad', ['uses' => 'CiudadController@store']);
+    $router->put('ciudad/{id}', ['uses' => 'CiudadController@update']);
+    $router->delete('ciudad/{id}', ['uses' => 'CiudadController@destroy']);
+
+
     //Departamento
     $router->get('departamento', ["uses" => "DepartamentoController@index"]);
     $router->get('departamento/{id}', ['uses' => 'DepartamentoController@show']);
@@ -81,11 +98,21 @@ $router->group(['middleware' => [ 'auth', 'valid' ] ], function () use ($router)
     $router->delete('proveedor/{id}', ['uses' => 'ProveedorController@destroy']);
 
 
-// Presupuesto
+    // Presupuesto
     $router->get('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@show"]);
     $router->post('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@store"]);
+
+
+    //Bodega
+    $router->get('bodega', ["uses" => "BodegaController@index"]);
+//    $router->get('bodega_combo', ["uses" => "BodegaController@combo"]);
+    $router->get('bodega/{id}', ['uses' => 'BodegaController@show']);
+    $router->post('bodega', ['uses' => 'BodegaController@store']);
+    $router->put('bodega/{id}', ['uses' => 'BodegaController@update']);
+    $router->delete('bodega/{id}', ['uses' => 'BodegaController@destroy']);
 
 
 
 
 });
+
