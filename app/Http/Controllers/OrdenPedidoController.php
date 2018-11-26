@@ -50,7 +50,7 @@ class OrdenPedidoController extends Controller
                 ->where('c.IDUsers',$request->user()->id)
                 ->get(['areacolab.ID'])[0];
 
-                $opedido->IDAreaColab = $areacolab;
+                $opedido->IDAreaColab = $areacolab->ID;
 
                 $opedido->save();
                 foreach ($request->all()['Detalles'] as $detalle) {
