@@ -34,6 +34,25 @@ class BodegaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function list( Request $request )
+    {
+        try {
+            $Bodega = Bodega::
+                            join('Ciudad', 'Ciudad.ID', 'IDCiudad')
+                            ->join('Pais', 'Pais.ID', 'Ciudad.IDPais')
+                            ->get([ 'Bodega.*', DB::raw("concat(Ciudad.Descripcion, ' - ', Pais.Descripcion) as Ciudad") ]);
+//                            ->paginate($request->input('psize'));
+            return response()->json($Bodega, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function combo()
     {
         try {
