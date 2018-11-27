@@ -117,6 +117,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Items
     $router->get('items', ["uses" => "ItemController@index"]);
+    $router->get('autocompleteitems', ["uses" => "ItemController@autocomplete"]);
     $router->get('items/{id}', ['uses' => 'ItemController@show']);
     $router->post('items', ['uses' => 'ItemController@store']);
     $router->put('items/{id}', ['uses' => 'ItemController@update']);
