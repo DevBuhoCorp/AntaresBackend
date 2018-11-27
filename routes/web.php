@@ -134,7 +134,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     //Bodega
     $router->get('bodega', ["uses" => "BodegaController@index"]);
-//    $router->get('bodega_combo', ["uses" => "BodegaController@combo"]);
+    $router->get('bodega_combo', ["uses" => "BodegaController@combo"]);
     $router->get('bodega/{id}', ['uses' => 'BodegaController@show']);
     $router->post('bodega', ['uses' => 'BodegaController@store']);
     $router->put('bodega/{id}', ['uses' => 'BodegaController@update']);
@@ -150,4 +150,11 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->get('tipomovimiento_combo', ["uses" => "TipoMovimientoController@combo"]);
 
 
+    #region Bodega-TipoMovimiento
+    $router->get('bodegatmov/{bodega}', ["uses" => "BodegaTipoMovimientoController@index"]);
+    $router->post('bodegatmov/{bodega}', ["uses" => "BodegaTipoMovimientoController@store"]);
+
+
 });
+
+

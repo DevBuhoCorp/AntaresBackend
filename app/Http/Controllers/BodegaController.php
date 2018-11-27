@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Bodega;
+use App\Models\BodegaTMovimiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -129,6 +131,22 @@ class BodegaController extends Controller
             $Bodega = Bodega::find($id);
             $Bodega->Estado = 'INA';
             $Bodega->save();
+            return Response($Bodega, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function store_bodegaTipoMovimiento()
+    {
+        try {
+            $Bodega = BodegaTMovimiento::all();
             return Response($Bodega, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);

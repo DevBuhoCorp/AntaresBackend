@@ -1,10 +1,17 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class BodegaTMovimiento extends Model
+class BodegaTMovimiento extends Eloquent
 {
-    //
+    protected $table = 'bodegatmovimiento';
+    public $timestamps = false;
+    public $incrementing = false;
+
+    protected $fillable = [
+        'IDBodega',
+        'IDTipoMovimiento'
+    ];
 }
