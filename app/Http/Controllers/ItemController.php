@@ -7,6 +7,17 @@ use App\Models\Item;
 
 class ItemController extends Controller
 {
+
+    public function autocomplete()
+    {
+        try {
+            $item = Item::where('Estado', 'ACT')
+                ->get(['ID', 'Descripcion']);
+            return response()->json($item, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
     /**
      * Display a listing of the resource.
      *
