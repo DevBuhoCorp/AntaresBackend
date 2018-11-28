@@ -125,7 +125,13 @@ class OrdenPedidoController extends Controller
             if ($request->isJson()) {
                 $opedido = Ordenpedido::find($id);
                 $opedido->fill($request->all());
-                //$opedido->Estado = 'ENV';
+                if($opedido->Estado == 'ACT' || 'RCH'){
+                    $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
+                    ->where('c.IDUsers', $request->user()->id)
+                    ->get(['areacolab.ID'])[0];
+                    $opedido->IDAutorizado = $areacolab->ID;
+                    $opedido->FechaAutorizacion = Carbon::now('America/Guayaquil');
+                }
                 $opedido->save();
                 return response()->json($opedido, 200);
             }

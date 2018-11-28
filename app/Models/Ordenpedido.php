@@ -47,7 +47,8 @@ class Ordenpedido extends Eloquent
 		'Observacion',
 		'IDAutorizado',
 		'FechaAutorizacion',
-		'IDAreaColab'
+		'IDAreaColab',
+		'ObservacionAutorizacion'
 	];
 
 	public function areacolab()
