@@ -20,11 +20,13 @@ class OrdenPedidoController extends Controller
         try {
             if ($request->isJson()) {
 
+                
+
                 $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
                     ->where('c.IDUsers', $request->user()->id)
                     ->get(['areacolab.ID'])[0];
 
-                $ordenpedido = Ordenpedido::where('Estado', 'BRR')
+                $ordenpedido = Ordenpedido::where('Estado', $request->input('Estado'))
                     ->where('IDAreaColab', $areacolab->ID)
 
                     ->paginate($request->input('psize'));
@@ -123,7 +125,7 @@ class OrdenPedidoController extends Controller
             if ($request->isJson()) {
                 $opedido = Ordenpedido::find($id);
                 $opedido->fill($request->all());
-                $opedido->Estado = 'ENV';
+                //$opedido->Estado = 'ENV';
                 $opedido->save();
                 return response()->json($opedido, 200);
             }
