@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Detalleop;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\MockObject\Stub\Exception;
 
 class DetalleOPController extends Controller
 {
@@ -68,7 +70,26 @@ class DetalleOPController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            if ($request->isJson()) {
+                foreach ($request->all() as $detalle) {
+                    if($detalle["ID"]){
+                        $upd = Detalleop::find($detalle["ID"]);
+                        $upd->fill($detalle);
+                        $upd->save();
+                    } else {
+                        $detalle = new Detalleop($detalle);
+                        $detalle->IdOPedido = $id;
+                        $detalle->save();
+                    }
+
+                }
+                return response()->json($upd, 200);
+            }
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**

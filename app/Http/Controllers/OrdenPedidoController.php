@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Areacolab;
 use App\Models\Detalleop;
 use App\Models\Ordenpedido;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Models\Areacolab;
+use Illuminate\Http\Request;
 
 class OrdenPedidoController extends Controller
 {
@@ -15,9 +15,26 @@ class OrdenPedidoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            if ($request->isJson()) {
+
+                $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
+                    ->where('c.IDUsers', $request->user()->id)
+                    ->get(['areacolab.ID'])[0];
+
+                $ordenpedido = Ordenpedido::where('Estado', 'BRR')
+                    ->where('IDAreaColab', $areacolab->ID)
+
+                    ->paginate($request->input('psize'));
+
+                return response()->json($ordenpedido, 200);
+            }
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**
@@ -45,10 +62,9 @@ class OrdenPedidoController extends Controller
                 $opedido->FechaRegistro = $carbon->toDateString();
                 $opedido->Estado = ($request->input('Estado'));
                 $opedido->Observacion = ($request->input('Observacion'));
-                //return $request->user();
-                $areacolab = Areacolab::join('colaborador as c','c.ID','areacolab.IdColaborador')
-                ->where('c.IDUsers',$request->user()->id)
-                ->get(['areacolab.ID'])[0];
+                $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
+                    ->where('c.IDUsers', $request->user()->id)
+                    ->get(['areacolab.ID'])[0];
 
                 $opedido->IDAreaColab = $areacolab->ID;
 
@@ -73,9 +89,14 @@ class OrdenPedidoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        try {
+            $detalle = Detalleop::where('IdOPedido', $id)->paginate($request->input('psize'));
+            return response()->json($detalle, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**
@@ -98,7 +119,18 @@ class OrdenPedidoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            if ($request->isJson()) {
+                $opedido = Ordenpedido::find($id);
+                $opedido->fill($request->all());
+                $opedido->Estado = 'ENV';
+                $opedido->save();
+                return response()->json($opedido, 200);
+            }
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**

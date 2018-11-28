@@ -132,6 +132,14 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->delete('opedido/{id}', ['uses' => 'OrdenPedidoController@destroy']);
     #endregion
 
+    #region Detalle de Pedido
+    $router->get('detallepedido', ["uses" => "DetalleOPController@index"]);
+    $router->get('detallepedido/{id}', ['uses' => 'DetalleOPController@show']);
+    $router->post('detallepedido', ['uses' => 'DetalleOPController@store']);
+    $router->put('detallepedido/{id}', ['uses' => 'DetalleOPController@update']);
+    $router->delete('detallepedido/{id}', ['uses' => 'DetalleOPController@destroy']);
+    #endregion
+    
 
     //Bodega
     $router->get('bodega', ["uses" => "BodegaController@index"]);
