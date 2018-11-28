@@ -11,7 +11,7 @@ class TipoMovimientoController extends Controller
     public function combo()
     {
         try {
-            $Tipomovimiento = Tipomovimiento::where('Estado', 'ACT')->get(['ID', 'Descripcion']);
+            $Tipomovimiento = Tipomovimiento::where('Estado', 'ACT')->get(['ID', 'Descripcion', 'Tipo']);
             return response()->json($Tipomovimiento, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);

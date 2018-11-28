@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colaborador;
+use App\User;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -14,6 +16,17 @@ class UsersController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function combo( Request $request )
+    {
+        $users = User::all();
+        return response()->json( $users, 201);
     }
 
     /**
@@ -33,6 +46,17 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_usuariotmov(Request $request)
     {
         //
     }

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class BodegaTMovimiento extends Eloquent
+class UsersTMovimiento extends Eloquent
 {
-    protected $table = 'bodegatmovimiento';
+    protected $table = 'usuariotmovimiento';
     public $timestamps = false;
     public $incrementing = false;
 
     protected $fillable = [
-        'IDBodega',
+        'IDUsers',
         'IDTipoMovimiento'
     ];
 }
