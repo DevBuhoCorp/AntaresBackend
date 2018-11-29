@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * 
  * @property int $ID
  * @property string $Descripcion
+ * @property string $NombreCorto
  * @property string $Estado
  * 
  * @property \Illuminate\Database\Eloquent\Collection $areas
@@ -28,6 +29,7 @@ class Departamento extends Eloquent
 
 	protected $fillable = [
 		'Descripcion',
+		'NombreCorto',
 		'Estado'
 	];
 

@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 21 Nov 2018 19:46:49 +0000.
+ * Date: Thu, 29 Nov 2018 16:06:40 +0000.
  */
 
 namespace App\Models;
@@ -19,7 +19,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * @property string $ApellidoMaterno
  * @property string $Cedula
  * @property string $Estado
+ * @property int $IDUsers
  * 
+ * @property \App\Models\User $user
  * @property \Illuminate\Database\Eloquent\Collection $areacolabs
  *
  * @package App\Models
@@ -30,14 +32,24 @@ class Colaborador extends Eloquent
 	protected $primaryKey = 'ID';
 	public $timestamps = false;
 
+	protected $casts = [
+		'IDUsers' => 'int'
+	];
+
 	protected $fillable = [
 		'NombrePrimero',
 		'NombreSegundo',
 		'ApellidoPaterno',
 		'ApellidoMaterno',
 		'Cedula',
-		'Estado'
+		'Estado',
+		'IDUsers'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(\App\Models\User::class, 'IDUsers');
+	}
 
 	public function areacolabs()
 	{

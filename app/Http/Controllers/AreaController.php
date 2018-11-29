@@ -29,8 +29,8 @@ class AreaController extends Controller
     {
         try {
             if ($request->isJson()) {
-                $area = Area::join('departamento', 'IDDepartamento', '=', 'departamento.ID')
-                    ->select('area.ID', 'area.Descripcion', 'departamento.Descripcion as Departamento', 'area.Estado')
+                $area = Area::join('Departamento', 'IDDepartamento', '=', 'Departamento.ID')
+                    ->select('area.*', 'Departamento.Descripcion as Departamento')
                     ->paginate($request->input('psize'));
                 return response()->json($area, 200);
             }

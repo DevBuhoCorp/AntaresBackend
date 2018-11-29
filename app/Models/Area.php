@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * 
  * @property int $ID
  * @property string $Descripcion
+ * * @property string $NombreCorto
  * @property string $Estado
  * @property int $IDDepartamento
  * 
@@ -35,6 +36,7 @@ class Area extends Eloquent
 
 	protected $fillable = [
 		'Descripcion',
+		'NombreCorto',
 		'Estado',
 		'IDDepartamento'
 	];

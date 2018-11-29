@@ -65,6 +65,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Colaborador
     $router->get('colaborador', ["uses" => "ColaboradorController@index"]);
+    $router->get('colaborador_user', ["uses" => "ColaboradorController@colaborador_user"]);
     $router->get('colaboradorarea', ["uses" => "ColaboradorController@colaboradorarea"]);
     $router->get('colaborador/{id}', ['uses' => 'ColaboradorController@show']);
     $router->get('colaboradorareashow/{id}', ['uses' => 'ColaboradorController@colaboradorareashow']);
@@ -180,7 +181,16 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->post('bodegatmov/{bodega}', ["uses" => "BodegaTipoMovimientoController@store"]);
     #endregion
 
-    ##region Usuario-Bodega
+    #region Usuario
+    $router->get('usuario', ['uses' => 'UsuarioController@index']);
+    $router->get('usuario/{id}', ['uses' => 'UsuarioController@show']);
+    $router->put('changepass/{userid}', ['uses' => 'UsuarioController@changepass']);
+    $router->post('usuario', ['uses' => 'UsuarioController@store']);
+//    $router->put('usuario/{userid}/{datosid}', ['uses' => 'UsuarioController@update']);
+    $router->delete('usuario/{id}', ['uses' => 'UsuarioController@destroy']);
+    #endregion
+
+    #region Usuario-Bodega
     $router->get('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@index"]);
     $router->post('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@store"]);
     #endregion
