@@ -159,6 +159,16 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->delete('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@destroy']);
     $router->get('tipomovimiento_combo', ["uses" => "TipoMovimientoController@combo"]);
 
+    #region Tipo Documento
+    $router->get('tipodocumento', ["uses" => "TipoDocumentoController@index"]);
+    $router->get('tipodocumento/{id}', ['uses' => 'TipoDocumentoController@show']);
+    $router->post('tipodocumento', ['uses' => 'TipoDocumentoController@store']);
+    $router->put('tipodocumento/{id}', ['uses' => 'TipoDocumentoController@update']);
+    $router->delete('tipodocumento/{id}', ['uses' => 'TipoDocumentoController@destroy']);
+    $router->get('tipodocumento_combo', ["uses" => "TipoDocumentoController@combo"]);
+    #endregion
+
+
     #region Users
     $router->get('users_combo', ["uses" => "UsersController@combo"]);
     $router->get('usuariotmov/{user}', ["uses" => "UsersTipoMovimientoController@index"]);
