@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tipodocumento;
 use Illuminate\Http\Request;
-use App\Models\Area;
 
-class AreaController extends Controller
+class TipoDocumentoController extends Controller
 {
-
-    public function combo($id)
+    public function combo()
     {
         try {
-            $area = Area::where('Estado', 'ACT')
-                ->where('IDDepartamento', $id)
-                ->get(['ID', 'Descripcion']);
-            return response()->json($area, 200);
+            $Tipodocumento = Tipodocumento::where('Estado', 'ACT')->get(['ID', 'Descripcion']);
+            return response()->json($Tipodocumento, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -28,13 +25,8 @@ class AreaController extends Controller
     public function index(Request $request)
     {
         try {
-            if ($request->isJson()) {
-                $area = Area::join('Departamento', 'IDDepartamento', '=', 'Departamento.ID')
-                    ->select('area.*', 'Departamento.Descripcion as Departamento')
-                    ->paginate($request->input('psize'));
-                return response()->json($area, 200);
-            }
-            return response()->json(['error' => 'Unauthorized'], 401);
+            $Tipodocumento = Tipodocumento::paginate($request->input('psize'));
+            return response()->json($Tipodocumento, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -53,17 +45,18 @@ class AreaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         try {
             if ($request->isJson()) {
-                $area = Area::create($request->all());
-                $area->Estado = $area->Estado ? 'ACT' : 'INA';
-                $area->save();
-                return response()->json($area, 201);
+                $data = $request->all();
+                $data["Estado"] = $data["Estado"] ? 'ACT' : 'INA';
+                $Tipodocumento = Tipodocumento::create( $data );
+                $Tipodocumento->save();
+                return response()->json($Tipodocumento, 201);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         } catch (ModelNotFoundException $e) {
@@ -74,14 +67,14 @@ class AreaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         try {
-            $area = Area::find($id);
-            return response()->json($area, 200);
+            $Tipodocumento = Tipodocumento::find($id);
+            return response()->json($Tipodocumento, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -90,7 +83,7 @@ class AreaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -101,19 +94,20 @@ class AreaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         try {
             if ($request->isJson()) {
-                $area = Area::find($id);
-                $area->fill($request->all());
-                $area->Estado = $request->input('Estado') ? 'ACT' : 'INA';
-                $area->save();
-                return response()->json($area, 200);
+                $data = $request->all();
+                $data["Estado"] = $data["Estado"] ? 'ACT' : 'INA';
+                $Tipodocumento = Tipodocumento::find($id);
+                $Tipodocumento->fill( $data );
+                $Tipodocumento->save();
+                return response()->json($Tipodocumento, 200);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         } catch (ModelNotFoundException $e) {
@@ -124,16 +118,16 @@ class AreaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         try {
-            $area = Area::find($id);
-            $area->Estado = 'INA';
-            $area->save();
-            return Response($area, 200);
+            $Tipodocumento = Tipodocumento::find($id);
+            $Tipodocumento->Estado = 'INA';
+            $Tipodocumento->save();
+            return Response($Tipodocumento, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }

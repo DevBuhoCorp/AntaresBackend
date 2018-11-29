@@ -104,6 +104,37 @@ class ColaboradorController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function colaborador_user( Request $request )
+    {
+        try {
+
+            $colaborador = Colaborador::join('Areacolab', 'Areacolab.IdColaborador', 'Colaborador.ID')
+//                ->join('Cargo', 'Areacolab.IdCargo', 'Cargo.ID')
+                ->join('Area', 'Areacolab.IdArea', 'Area.ID')
+                ->join('Departamento', 'Area.IDDepartamento', 'Departamento.ID')
+                ->where('Colaborador.IDUsers', $request->user()->id )
+                ->whereNull( 'Areacolab.FechaFin' )
+                ->get([
+                    'Colaborador.NombrePrimero',
+                    'Colaborador.ApellidoPaterno',
+//                    'Cargo.Descripcion as Cargo',
+                    'Departamento.NombreCorto as Departamento',
+                    'Area.NombreCorto as Area',
+                    DB::raw("concat(Departamento.Descripcion, ' - ', Area.Descripcion) as Tooltip")
+                ])[0];
+            return response()->json($colaborador, 200);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id

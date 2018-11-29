@@ -65,6 +65,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Colaborador
     $router->get('colaborador', ["uses" => "ColaboradorController@index"]);
+    $router->get('colaborador_user', ["uses" => "ColaboradorController@colaborador_user"]);
     $router->get('colaboradorarea', ["uses" => "ColaboradorController@colaboradorarea"]);
     $router->get('colaborador/{id}', ['uses' => 'ColaboradorController@show']);
     $router->get('colaboradorareashow/{id}', ['uses' => 'ColaboradorController@colaboradorareashow']);
@@ -161,6 +162,16 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->get('tipomovimiento_combo', ["uses" => "TipoMovimientoController@combo"]);
     #endregion
 
+    #region Tipo Documento
+    $router->get('tipodocumento', ["uses" => "TipoDocumentoController@index"]);
+    $router->get('tipodocumento/{id}', ['uses' => 'TipoDocumentoController@show']);
+    $router->post('tipodocumento', ['uses' => 'TipoDocumentoController@store']);
+    $router->put('tipodocumento/{id}', ['uses' => 'TipoDocumentoController@update']);
+    $router->delete('tipodocumento/{id}', ['uses' => 'TipoDocumentoController@destroy']);
+    $router->get('tipodocumento_combo', ["uses" => "TipoDocumentoController@combo"]);
+    #endregion
+
+
     #region Users
     $router->get('users_combo', ["uses" => "UsersController@combo"]);
     $router->get('usuariotmov/{user}', ["uses" => "UsersTipoMovimientoController@index"]);
@@ -170,6 +181,15 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     #region Bodega-TipoMovimiento
     $router->get('bodegatmov/{bodega}', ["uses" => "BodegaTipoMovimientoController@index"]);
     $router->post('bodegatmov/{bodega}', ["uses" => "BodegaTipoMovimientoController@store"]);
+    #endregion
+    
+    #region Usuario
+    $router->get('usuario', ['uses' => 'UsuarioController@index']);
+    $router->get('usuario/{id}', ['uses' => 'UsuarioController@show']);
+    $router->put('changepass/{userid}', ['uses' => 'UsuarioController@changepass']);
+    $router->post('usuario', ['uses' => 'UsuarioController@store']);
+//    $router->put('usuario/{userid}/{datosid}', ['uses' => 'UsuarioController@update']);
+    $router->delete('usuario/{id}', ['uses' => 'UsuarioController@destroy']);
     #endregion
 
     #region Usuario-Bodega
