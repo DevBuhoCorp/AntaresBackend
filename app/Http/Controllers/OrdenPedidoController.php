@@ -28,10 +28,36 @@ class OrdenPedidoController extends Controller
 
                 $ordenpedido = Ordenpedido::where('Estado', $request->input('Estado'))
                     ->where('IDAreaColab', $areacolab->ID)
-
                     ->paginate($request->input('psize'));
 
                 return response()->json($ordenpedido, 200);
+            }
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    public function indexauth(Request $request)
+    {
+        try {
+            if ($request->isJson()) {
+
+                $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
+                    ->join('cargo as cg','cg.ID','areacolab.IdCargo')
+                    ->where('c.IDUsers', $request->user()->id)
+                    ->get(['areacolab.ID','cg.Autorizar'])[0];
+                
+                if($areacolab->Autorizar == 1){
+                    $ordenpedido = Ordenpedido::where('Estado', $request->input('Estado'))
+                    ->paginate($request->input('psize'));
+                    return response()->json($ordenpedido, 200);
+                }
+                else{
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
+
+                
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         } catch (ModelNotFoundException $e) {

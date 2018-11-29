@@ -126,6 +126,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Orden de Pedido
     $router->get('opedido', ["uses" => "OrdenPedidoController@index"]);
+    $router->get('opedidoauth', ["uses" => "OrdenPedidoController@indexauth"]);
     $router->get('opedido/{id}', ['uses' => 'OrdenPedidoController@show']);
     $router->post('opedido', ['uses' => 'OrdenPedidoController@store']);
     $router->put('opedido/{id}', ['uses' => 'OrdenPedidoController@update']);
@@ -141,7 +142,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     #endregion
     
 
-    //Bodega
+    #region Bodega
     $router->get('bodega', ["uses" => "BodegaController@index"]);
     $router->get('bodega_combo', ["uses" => "BodegaController@combo"]);
     $router->get('bodega_list', ["uses" => "BodegaController@list"]);
@@ -149,15 +150,16 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->post('bodega', ['uses' => 'BodegaController@store']);
     $router->put('bodega/{id}', ['uses' => 'BodegaController@update']);
     $router->delete('bodega/{id}', ['uses' => 'BodegaController@destroy']);
+    #endregion
 
-
-    // Tipo Movimiento
+    #region Tipo Movimiento
     $router->get('tipomovimiento', ["uses" => "TipoMovimientoController@index"]);
     $router->get('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@show']);
     $router->post('tipomovimiento', ['uses' => 'TipoMovimientoController@store']);
     $router->put('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@update']);
     $router->delete('tipomovimiento/{id}', ['uses' => 'TipoMovimientoController@destroy']);
     $router->get('tipomovimiento_combo', ["uses" => "TipoMovimientoController@combo"]);
+    #endregion
 
     #region Users
     $router->get('users_combo', ["uses" => "UsersController@combo"]);
@@ -170,7 +172,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->post('bodegatmov/{bodega}', ["uses" => "BodegaTipoMovimientoController@store"]);
     #endregion
 
-    ##region Usuario-Bodega
+    #region Usuario-Bodega
     $router->get('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@index"]);
     $router->post('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@store"]);
     #endregion
