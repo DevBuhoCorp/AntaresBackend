@@ -7,6 +7,7 @@ use App\Models\Detalleop;
 use App\Models\Ordenpedido;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrdenPedidoController extends Controller
 {
@@ -26,8 +27,13 @@ class OrdenPedidoController extends Controller
                     ->where('c.IDUsers', $request->user()->id)
                     ->get(['areacolab.ID'])[0];
 
-                $ordenpedido = Ordenpedido::where('Estado', $request->input('Estado'))
+                $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
                     ->where('IDAreaColab', $areacolab->ID)
+                    ->join('areacolab as ac','ordenpedido.IDAreaColab','ac.ID')
+                    ->join('colaborador as c','ac.IdColaborador','c.ID')
+                    ->join('area as a','ac.IdArea','a.ID')
+                    ->join('cargo as cg','ac.IdCargo','cg.ID')
+                    ->select('ordenpedido.*',DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"),'a.Descripcion as Area','cg.Descripcion as Cargo')
                     ->paginate($request->input('psize'));
 
                 return response()->json($ordenpedido, 200);
@@ -49,7 +55,12 @@ class OrdenPedidoController extends Controller
                     ->get(['areacolab.ID','cg.Autorizar'])[0];
                 
                 if($areacolab->Autorizar == 1){
-                    $ordenpedido = Ordenpedido::where('Estado', $request->input('Estado'))
+                    $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
+                    ->join('areacolab as ac','ordenpedido.IDAreaColab','ac.ID')
+                    ->join('colaborador as c','ac.IdColaborador','c.ID')
+                    ->join('area as a','ac.IdArea','a.ID')
+                    ->join('cargo as cg','ac.IdCargo','cg.ID')
+                    ->select('ordenpedido.*',DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"),'a.Descripcion as Area','cg.Descripcion as Cargo')
                     ->paginate($request->input('psize'));
                     return response()->json($ordenpedido, 200);
                 }
@@ -87,7 +98,8 @@ class OrdenPedidoController extends Controller
             if ($request->isJson()) {
                 $carbon = new Carbon($request->input('FechaRegistro'));
                 $opedido = new Ordenpedido();
-                $opedido->FechaRegistro = $carbon->toDateString();
+                $opedido->FechaOrdenPedido = $carbon->toDateString();
+                $opedido->FechaRegistro = Carbon::now('America/Guayaquil');
                 $opedido->Estado = ($request->input('Estado'));
                 $opedido->Observacion = ($request->input('Observacion'));
                 $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
