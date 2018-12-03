@@ -27,9 +27,10 @@ class OrdenPedidoController extends Controller
                     ->where('c.IDUsers', $request->user()->id)
                     ->get(['areacolab.ID'])[0];
 
+                    
                 $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
                     ->where('IDAreaColab', $areacolab->ID)
-                    ->join('areacolab as ac','ordenpedido.IDAreaColab','ac.ID')
+                    ->join('areacolab as ac','ordenpedido.IDAutorizado','ac.ID')
                     ->join('colaborador as c','ac.IdColaborador','c.ID')
                     ->join('area as a','ac.IdArea','a.ID')
                     ->join('cargo as cg','ac.IdCargo','cg.ID')
