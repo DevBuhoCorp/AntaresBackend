@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Detallecotizacion;
 use Illuminate\Http\Request;
+use App\Models\Cotizacion;
 
 class DetalleCotController extends Controller
 {
@@ -72,15 +73,26 @@ class DetalleCotController extends Controller
     {
         try {
             if ($request->isJson()) {
-                $detallescotizacion = Detallecotizacion::where('IDCotizacion', 1)->get();
+                $detallescotizacion = Detallecotizacion::where('IDCotizacion', $id)->get();
                 
                 $count = 0;
                 foreach ($detallescotizacion as $detalle) {
-                    $detalle->IDProveedor = $request->all()[$count];
-                    
+                    $detalle->IDProveedor = $request->all()['Detalle'][$count];
                     $detalle->save();
                     $count++;
                 }
+
+                $cotizacion = Cotizacion::find($id);
+                $fechainicio = new Carbon($request->input('FechaIni'));
+                $fechafin = new Carbon($request->input('FechaFin'));
+                $cotizacion = Cotizacion::find($id);
+                $cotizacion->FechaIni = $fechainicio->toDateString();
+                $cotizacion->FechaFin = $fechafin->toDateString();
+                //$cotizacion->FechaReg = Carbon::now('America/Guayaquil'); Aumentar Fecha Edición?
+                //$cotizacion->Estado = $request->input('Estado');
+                $cotizacion->Observacion = $request->input('Observacion');
+                $cotizacion->save();
+
                 return response()->json(true, 200);
             }
             return response()->json(['error' => 'Unauthorized'], 401);

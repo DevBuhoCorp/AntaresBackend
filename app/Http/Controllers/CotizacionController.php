@@ -91,16 +91,19 @@ class CotizacionController extends Controller
     public function show(Request $request, $id)
     {
         try {
+            $count = 0;
             $detallecotizacion = Detallecotizacion::where('IdCotizacion',$id)->get();
             $array = [];
             foreach ($detallecotizacion as $detalle) {
                 
                 $detalleop = Detalleop::find($detalle->IDDetalleordenpedido);
                 array_push($array, $detalleop);
+                $array[$count]["IDProveedor"] = $detalle->IDProveedor;
+                $count++;
                 
             }
-           // $detalleop->paginate($request->input('psize'));
-            return response()->json($array, 200);
+           $cabecera = Cotizacion::find($id);
+            return response()->json(['cabecera' => $cabecera, 'detalle' => $array], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
