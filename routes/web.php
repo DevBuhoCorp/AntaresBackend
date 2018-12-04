@@ -104,6 +104,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Proveedor
     $router->get('proveedor', ["uses" => "ProveedorController@index"]);
+    $router->get('proveedorcombo', ["uses" => "ProveedorController@combo"]);
     $router->get('proveedor/{id}', ['uses' => 'ProveedorController@show']);
     $router->post('proveedor', ['uses' => 'ProveedorController@store']);
     $router->put('proveedor/{id}', ['uses' => 'ProveedorController@update']);
@@ -197,6 +198,21 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->post('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@store"]);
     #endregion
 
+    #region Cotizacion
+    $router->get('cotizacion', ['uses' => 'CotizacionController@index']);
+    $router->get('cotizacion/{id}', ['uses' => 'CotizacionController@show']);
+    $router->put('cotizacion/{id}', ['uses' => 'CotizacionController@update']);
+    $router->post('cotizacion', ['uses' => 'CotizacionController@store']);
+    $router->delete('cotizacion/{id}', ['uses' => 'CotizacionController@destroy']);
+    #endregion
+
+    #region DetalleCotizacion
+    $router->get('detallecotizacion', ['uses' => 'DetalleCotController@index']);
+    $router->get('detallecotizacion/{id}', ['uses' => 'DetalleCotController@show']);
+    $router->put('detallecotizacion/{id}', ['uses' => 'DetalleCotController@update']);
+    $router->post('detallecotizacion', ['uses' => 'DetalleCotController@store']);
+    $router->delete('detallecotizacion/{id}', ['uses' => 'DetalleCotController@destroy']);
+    #endregion
 });
 
 

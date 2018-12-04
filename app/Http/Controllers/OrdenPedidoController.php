@@ -101,8 +101,8 @@ class OrdenPedidoController extends Controller
                 $opedido = new Ordenpedido();
                 $opedido->FechaOrdenPedido = $carbon->toDateString();
                 $opedido->FechaRegistro = Carbon::now('America/Guayaquil');
-                $opedido->Estado = ($request->input('Estado'));
-                $opedido->Observacion = ($request->input('Observacion'));
+                $opedido->Estado = $request->input('Estado');
+                $opedido->Observacion = $request->input('Observacion');
                 $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
                     ->where('c.IDUsers', $request->user()->id)
                     ->get(['areacolab.ID'])[0];
