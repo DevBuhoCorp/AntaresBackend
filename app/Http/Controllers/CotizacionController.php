@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Areacolab;
 use App\Models\Ordenpedido;
+use Illuminate\Support\Facades\Mail;
 
 class CotizacionController extends Controller
 {
@@ -146,5 +147,23 @@ class CotizacionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function email(Request $request)
+    {
+        
+        Mail::raw( $request->input('message'), function ($msg) use ($request) {
+
+           /*  $msg->to([$request->input('to')])->subject($request->input('subject'));
+            $msg->from([ $request->user()->email]); */
+
+            $msg->to(['ronald.chica.2ai@gmail.com']);
+            $msg->subject($request->input('subject'));
+            $msg->from(['dev.buhocorp@gmail.com']);
+        
+        });
+
+        return response()->json(true, 200);
+
     }
 }

@@ -14,7 +14,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-
+$router->post('cotizacionmail', ['uses' => 'CotizacionController@email']);
 
 $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
@@ -209,6 +209,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->get('cotizacion/{id}', ['uses' => 'CotizacionController@show']);
     $router->put('cotizacion/{id}', ['uses' => 'CotizacionController@update']);
     $router->post('cotizacion', ['uses' => 'CotizacionController@store']);
+   
     $router->delete('cotizacion/{id}', ['uses' => 'CotizacionController@destroy']);
     #endregion
 
