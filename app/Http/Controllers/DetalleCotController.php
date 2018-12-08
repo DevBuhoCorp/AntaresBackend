@@ -77,21 +77,10 @@ class DetalleCotController extends Controller
                 
                 $count = 0;
                 foreach ($detallescotizacion as $detalle) {
-                    $detalle->IDProveedor = $request->all()['Detalle'][$count];
+                    $detalle->IDProveedor = $request->all()[$count];
                     $detalle->save();
                     $count++;
                 }
-
-                $cotizacion = Cotizacion::find($id);
-                $fechainicio = new Carbon($request->input('FechaIni'));
-                $fechafin = new Carbon($request->input('FechaFin'));
-                $cotizacion = Cotizacion::find($id);
-                $cotizacion->FechaIni = $fechainicio->toDateString();
-                $cotizacion->FechaFin = $fechafin->toDateString();
-                //$cotizacion->FechaReg = Carbon::now('America/Guayaquil'); Aumentar Fecha Edición?
-                //$cotizacion->Estado = $request->input('Estado');
-                $cotizacion->Observacion = $request->input('Observacion');
-                $cotizacion->save();
 
                 return response()->json(true, 200);
             }

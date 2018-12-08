@@ -23,7 +23,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
- $app->withFacades();
+$app->withFacades(true, [
+    'Maatwebsite\Excel\Facades\Excel' =>'Excel'
+]);
 
  $app->withEloquent();
 
@@ -47,6 +49,10 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
+$app->singleton('filesystem', function ($app) {
+    return $app->loadComponent('filesystems', 'Illuminate\Filesystem\FilesystemServiceProvider', 'filesystem');
+});
+
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +94,10 @@ $app->routeMiddleware([
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class );
+ $app->configure('services');    
+ $app->configure('mail');
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*

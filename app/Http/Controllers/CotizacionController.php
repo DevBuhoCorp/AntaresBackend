@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Cotizacion;
 use App\Models\Detallecotizacion;
 use App\Models\Detalleop;
-use App\Models\Ordenpedido;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\Areacolab;
+use App\Models\Ordenpedido;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CotizacionController extends Controller
 {
@@ -21,7 +24,7 @@ class CotizacionController extends Controller
     {
         try {
             if ($request->isJson()) {
-                $cotizacion = Cotizacion::where('Estado',$request->input('Estado'))->paginate($request->input('psize'));
+                $cotizacion = Cotizacion::where('Estado', $request->input('Estado'))->paginate($request->input('psize'));
                 return response()->json($cotizacion, 200);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -50,6 +53,10 @@ class CotizacionController extends Controller
     {
         try {
             if ($request->isJson()) {
+                $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
+                    ->join('cargo as cg', 'cg.ID', 'areacolab.IdCargo')
+                    ->where('c.IDUsers', $request->user()->id)
+                    ->get(['areacolab.ID', 'cg.Autorizar'])[0];
                 $fechainicio = new Carbon($request->input('FechaIni'));
                 $fechafin = new Carbon($request->input('FechaFin'));
                 $cotizacion = new Cotizacion();
@@ -58,6 +65,7 @@ class CotizacionController extends Controller
                 $cotizacion->FechaReg = Carbon::now('America/Guayaquil');
                 $cotizacion->Estado = $request->input('Estado');
                 $cotizacion->Observacion = $request->input('Observacion');
+                $cotizacion->IDAreaColab = $areacolab->ID;
                 $cotizacion->save();
                 foreach ($request->all()['Detalles'] as $id) {
                     $detallesop = Detalleop::where('IdOPedido', $id)->get(['ID']);
@@ -70,7 +78,7 @@ class CotizacionController extends Controller
                     }
 
                     $ordenpedido = Ordenpedido::find($id);
-                    $ordenpedido->Estado = 'EMT'; //Estado a Emitido
+                    $ordenpedido->Estado = 'COT'; //Estado a Emitido
                     $ordenpedido->save();
 
                 }
@@ -91,26 +99,18 @@ class CotizacionController extends Controller
     public function show(Request $request, $id)
     {
         try {
-//            $count = 0;
-//            $detallecotizacion = Detallecotizacion::where('IdCotizacion',$id)->get();
-//            $array = [];
-//            foreach ($detallecotizacion as $detalle) {
-//
-//                $detalleop = Detalleop::find($detalle->IDDetalleordenpedido);
-//                array_push($array, $detalleop);
-//                $array[$count]["IDProveedor"] = $detalle->IDProveedor;
-//                $count++;
-//
-//            }
-//           $cabecera = Cotizacion::find($id);
-//            return response()->json(['cabecera' => $cabecera, 'detalle' => $array], 200);
+            $count = 0;
+            $detallecotizacion = Detallecotizacion::where('IdCotizacion', $id)->get();
+            $array = [];
+            foreach ($detallecotizacion as $detalle) {
 
-            $cotizacion = Cotizacion::with('detallecotizacions')->where('ID', $id)->first();
-            foreach ($cotizacion->detallecotizacions as $detalle){
-                $detalle["DetOP"] = Detalleop::find($detalle->IDDetalleOrdenpedido);
+                $detalleop = Detalleop::find($detalle->IDDetalleOrdenpedido);
+                array_push($array, $detalleop);
+                $array[$count]["IDProveedor"] = $detalle->IDProveedor;
+                $count++;
+
             }
-
-            return response()->json($cotizacion, 200);
+            return response()->json($array, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -148,5 +148,36 @@ class CotizacionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function email(Request $request)
+    {
+//        Mail::to([$request->input('to')])->send('');
+        $data = array('name'=>"Kevin Suarez");
+//
+
+        Mail::send('cotizacion', $data, function($message) use ($request) {
+            $files = Excel::load('app/Files/PlanContable.xlsx');
+
+            $message->to( $request->input('to') , 'Tutorials Point')
+                    ->subject('Antares Cotizacion Mail')
+                    ->attach( $files->store("xlsx",false,true)['full'] );
+
+        });
+
+
+//        Mail::raw( $request->input('message'), function ($msg) use ($request) {
+//
+//           /*  $msg->to([$request->input('to')])->subject($request->input('subject'));
+//            $msg->from([ $request->user()->email]); */
+//
+//            $msg->to([$request->input('to')]);
+//            $msg->subject($request->input('subject'));
+//            $msg->from(['dev.buhocorp@gmail.com']);
+//
+//        });
+
+        return response()->json(true, 200);
+
     }
 }

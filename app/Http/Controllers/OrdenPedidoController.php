@@ -21,21 +21,30 @@ class OrdenPedidoController extends Controller
         try {
             if ($request->isJson()) {
 
-                
-
                 $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
                     ->where('c.IDUsers', $request->user()->id)
                     ->first(['areacolab.ID']);
 
-                    
-                $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
-                    ->where('IDAreaColab', $areacolab->ID)
-                    ->join('areacolab as ac','ordenpedido.IDAutorizado','ac.ID')
+                if (strcmp($request->input('Estado'), "ACT") == 0 || strcmp($request->input('Estado'), "RCH") == 0) {
+                    $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
+                        ->where('IDAreaColab', $areacolab->ID)
+                        ->join('areacolab as ac', 'ordenpedido.IDAutorizado', 'ac.ID')
+                        ->join('colaborador as c', 'ac.IdColaborador', 'c.ID')
+                        ->join('area as a', 'ac.IdArea', 'a.ID')
+                        ->join('cargo as cg', 'ac.IdCargo', 'cg.ID')
+                        ->select('ordenpedido.*', DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"), 'a.Descripcion as Area', 'cg.Descripcion as Cargo')
+                        ->paginate($request->input('psize'));
+
+                } else {
+                    $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
+                        ->where('IDAreaColab', $areacolab->ID)
+                    /* ->join('areacolab as ac','ordenpedido.IDAutorizado','ac.ID')
                     ->join('colaborador as c','ac.IdColaborador','c.ID')
                     ->join('area as a','ac.IdArea','a.ID')
                     ->join('cargo as cg','ac.IdCargo','cg.ID')
-                    ->select('ordenpedido.*',DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"),'a.Descripcion as Area','cg.Descripcion as Cargo')
-                    ->paginate($request->input('psize'));
+                    ->select('ordenpedido.*',DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"),'a.Descripcion as Area','cg.Descripcion as Cargo') */
+                        ->paginate($request->input('psize'));
+                }
 
                 return response()->json($ordenpedido, 200);
             }
@@ -51,25 +60,23 @@ class OrdenPedidoController extends Controller
             if ($request->isJson()) {
 
                 $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
-                    ->join('cargo as cg','cg.ID','areacolab.IdCargo')
+                    ->join('cargo as cg', 'cg.ID', 'areacolab.IdCargo')
                     ->where('c.IDUsers', $request->user()->id)
-                    ->get(['areacolab.ID','cg.Autorizar'])[0];
-                
-                if($areacolab->Autorizar == 1){
+                    ->get(['areacolab.ID', 'cg.Autorizar'])[0];
+
+                if ($areacolab->Autorizar == 1) {
                     $ordenpedido = Ordenpedido::where('ordenpedido.Estado', $request->input('Estado'))
-                    ->join('areacolab as ac','ordenpedido.IDAreaColab','ac.ID')
-                    ->join('colaborador as c','ac.IdColaborador','c.ID')
-                    ->join('area as a','ac.IdArea','a.ID')
-                    ->join('cargo as cg','ac.IdCargo','cg.ID')
-                    ->select('ordenpedido.*',DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"),'a.Descripcion as Area','cg.Descripcion as Cargo')
-                    ->paginate($request->input('psize'));
+                        ->join('areacolab as ac', 'ordenpedido.IDAreaColab', 'ac.ID')
+                        ->join('colaborador as c', 'ac.IdColaborador', 'c.ID')
+                        ->join('area as a', 'ac.IdArea', 'a.ID')
+                        ->join('cargo as cg', 'ac.IdCargo', 'cg.ID')
+                        ->select('ordenpedido.*', DB::raw("CONCAT(c.NombrePrimero, ' ' ,c.ApellidoPaterno) AS Colaborador"), 'a.Descripcion as Area', 'cg.Descripcion as Cargo')
+                        ->paginate($request->input('psize'));
                     return response()->json($ordenpedido, 200);
-                }
-                else{
+                } else {
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
 
-                
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         } catch (ModelNotFoundException $e) {
@@ -164,10 +171,10 @@ class OrdenPedidoController extends Controller
             if ($request->isJson()) {
                 $opedido = Ordenpedido::find($id);
                 $opedido->fill($request->all());
-                if($opedido->Estado == 'ACT' || 'RCH'){
+                if ($opedido->Estado == 'ACT' || 'RCH') {
                     $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
-                    ->where('c.IDUsers', $request->user()->id)
-                    ->get(['areacolab.ID'])[0];
+                        ->where('c.IDUsers', $request->user()->id)
+                        ->get(['areacolab.ID'])[0];
                     $opedido->IDAutorizado = $areacolab->ID;
                     $opedido->FechaAutorizacion = Carbon::now('America/Guayaquil');
                 }

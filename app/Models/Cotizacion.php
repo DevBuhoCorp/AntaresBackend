@@ -41,7 +41,8 @@ class Cotizacion extends Eloquent
 		'FechaReg',
 		'Observacion',
 		'Estado',
-		'Detalleregistro'
+		'Detalleregistro',
+		'IDAreaColab'
 	];
 
 	public function detallecotizacions()

@@ -29,13 +29,13 @@ class Detallecotizacion extends Eloquent
 
 	protected $casts = [
 		'IDCotizacion' => 'int',
-		'IDDetalleordenpedido' => 'int',
+		'IDDetalleOrdenpedido' => 'int',
 		'IDProveedor' => 'int',
 	];
 
 	protected $fillable = [
 		'IDCotizacion',
-		'IDDetalleordenpedido',
+		'IDDetalleOrdenpedido',
 		'IDProveedor',
 		'Estado'
 	];
