@@ -113,8 +113,13 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
+$app->register(\Barryvdh\DomPDF\ServiceProvider::class);
+
+
+
 $app->configure('auth');
 
+$app->configure('dompdf');
 
 
 return $app;

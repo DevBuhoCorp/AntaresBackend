@@ -11,6 +11,10 @@
 |
 */
 
+
+use Barryvdh\DomPDF\PDF;
+use Illuminate\Support\Facades\App;
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
@@ -197,4 +201,15 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
 });
 
+$router->get('/pdf', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML('<h1>Test</h1>');
+    return $pdf->download('invoice.pdf');
+
+
+//    PDF::SetTitle('Hello World');
+//    PDF::AddPage();
+//    PDF::Write(0, 'Hello World');
+//    PDF::Output('hello_world.pdf');
+});
 
