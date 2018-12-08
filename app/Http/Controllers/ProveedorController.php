@@ -7,6 +7,18 @@ use Illuminate\Http\Request;
 
 class ProveedorController extends Controller
 {
+    public function combo()
+    {
+        try {
+            
+                $Proveedor = Proveedor::where('Estado','ACT')->get(['ID','RazonSocial as Etiqueta']);
+                return response()->json($Proveedor, 200);
+            
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -38,7 +38,8 @@ class Ordenpedido extends Eloquent
 
 	protected $dates = [
 		'FechaRegistro',
-		'FechaAutorizacion'
+		'FechaAutorizacion',
+		'FechaOrdenPedido'
 	];
 
 	protected $fillable = [
@@ -48,7 +49,8 @@ class Ordenpedido extends Eloquent
 		'IDAutorizado',
 		'FechaAutorizacion',
 		'IDAreaColab',
-		'ObservacionAutorizacion'
+		'ObservacionAutorizacion',
+		'FechaOrdenPedido'
 	];
 
 	public function areacolab()

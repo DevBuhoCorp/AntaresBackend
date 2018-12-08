@@ -190,8 +190,10 @@ class ColaboradorController extends Controller
     {
         try {
             if ($request->isJson()) {
-                $colaborador = Colaborador::where('Estado', 'ACT')
-                    ->select('colaborador.ID', DB::raw("CONCAT(colaborador.NombrePrimero,' ',colaborador.ApellidoPaterno) as Nombre"), 'colaborador.Cedula', 'colaborador.Estado')
+                $colaborador = Colaborador::where('colaborador.Estado', 'ACT')
+                    ->join('areacolab as ac','colaborador.ID','ac.IdColaborador')
+                    ->join('area as a','ac.IdArea','a.ID')
+                    ->select('colaborador.ID', DB::raw("CONCAT(colaborador.NombrePrimero,' ',colaborador.ApellidoPaterno) as Nombre"), 'colaborador.Cedula', 'colaborador.Estado','a.Descripcion as Area')
                     ->paginate($request->input('psize'));
                 return response()->json($colaborador, 200);
             }
