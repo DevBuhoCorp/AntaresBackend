@@ -115,7 +115,6 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->delete('proveedor/{id}', ['uses' => 'ProveedorController@destroy']);
     #endregion
 
-
     #region Presupuesto
     $router->get('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@show"]);
     $router->post('presupuesto/{departamento}/{anio}', ["uses" => "PresupuestoController@store"]);
@@ -146,7 +145,6 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->put('detallepedido/{id}', ['uses' => 'DetalleOPController@update']);
     $router->delete('detallepedido/{id}', ['uses' => 'DetalleOPController@destroy']);
     #endregion
-    
 
     #region Bodega
     $router->get('bodega', ["uses" => "BodegaController@index"]);
@@ -157,7 +155,6 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->put('bodega/{id}', ['uses' => 'BodegaController@update']);
     $router->delete('bodega/{id}', ['uses' => 'BodegaController@destroy']);
     #endregion
-
 
     #region Tipo Movimiento
     $router->get('tipomovimiento', ["uses" => "TipoMovimientoController@index"]);
@@ -182,7 +179,6 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->get('tipodocumento_combo', ["uses" => "TipoDocumentoController@combo"]);
     #endregion
 
-
     #region Users
     $router->get('users_combo', ["uses" => "UsersController@combo"]);
     $router->get('usuariotmov/{user}', ["uses" => "UsersTipoMovimientoController@index"]);
@@ -204,6 +200,8 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     #endregion
 
     #region Usuario-Bodega
+    $router->get('usuario_bod/', ["uses" => "UsersBodegaController@combo"]);
+    $router->get('usuario_bod/tmovimiento/', ["uses" => "UsersBodegaController@user_bodega_movimiento"]);
     $router->get('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@index"]);
     $router->post('usuario_bod/{bodega}', ["uses" => "UsersBodegaController@store"]);
     #endregion
@@ -224,6 +222,11 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->post('detallecotizacion', ['uses' => 'DetalleCotController@store']);
     $router->delete('detallecotizacion/{id}', ['uses' => 'DetalleCotController@destroy']);
     #endregion
+
+    #region Movimientos
+    $router->get('bodega_productos/{bodega}', ["uses" => "MovimientoController@bodega_producto"]);
+    #endregion
+
 });
 
 $router->get('/pdf', function () {
