@@ -11,7 +11,7 @@ class ProveedorController extends Controller
     {
         try {
             
-                $Proveedor = Proveedor::where('Estado','ACT')->get(['ID','RazonSocial as Etiqueta']);
+                $Proveedor = Proveedor::where('Estado','ACT')->get(['ID','RazonSocial as Etiqueta','Email']);
                 return response()->json($Proveedor, 200);
             
         } catch (ModelNotFoundException $e) {

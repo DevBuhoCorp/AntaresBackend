@@ -1,5 +1,5 @@
 <html>
     <body>
-        <h1>Hola,soy {{ $name  }} y estoy probando Email. </h1>
+    <p><?=$mensaje;?></p>
     </body>
 </html>

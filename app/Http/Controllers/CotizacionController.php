@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Areacolab;
 use App\Models\Cotizacion;
 use App\Models\Detallecotizacion;
 use App\Models\Detalleop;
+use App\Models\Ordenpedido;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Areacolab;
-use App\Models\Ordenpedido;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -152,31 +152,23 @@ class CotizacionController extends Controller
 
     public function email(Request $request)
     {
-//        Mail::to([$request->input('to')])->send('');
-        $data = array('name'=>"Kevin Suarez");
-//
+        $cotizacion = Cotizacion::find($request->input('cotizacion'));
+        $cotizacion->Estado = "ENV";
+        $cotizacion->save();
 
-        Mail::send('cotizacion', $data, function($message) use ($request) {
-            $files = Excel::load('app/Files/PlanContable.xlsx');
+        ExportController::exportCotizacion($request->input('cotizacion'));
+        $data = array('mensaje' => $request->input('message'));
+        Mail::send('cotizacion', $data, function ($message) use ($request) {
+            $file1 = Excel::load('storage/exports/Cotizacion.xlsx');
+            $file2 = Excel::load('app/Files/Respuesta.xlsx');
 
-            $message->to( $request->input('to') , 'Tutorials Point')
-                    ->subject('Antares Cotizacion Mail')
-                    ->attach( $files->store("xlsx",false,true)['full'] );
+            $message->to($request->input('to'))
+                ->subject($request->input('subject'))
+                ->attach($file1->store("xlsx", false, true)['full'])
+                ->attach($file2->store("xlsx", false, true)['full']);
 
         });
-
-
-//        Mail::raw( $request->input('message'), function ($msg) use ($request) {
-//
-//           /*  $msg->to([$request->input('to')])->subject($request->input('subject'));
-//            $msg->from([ $request->user()->email]); */
-//
-//            $msg->to([$request->input('to')]);
-//            $msg->subject($request->input('subject'));
-//            $msg->from(['dev.buhocorp@gmail.com']);
-//
-//        });
-
+        
         return response()->json(true, 200);
 
     }
