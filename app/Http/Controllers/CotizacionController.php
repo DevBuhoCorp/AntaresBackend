@@ -99,18 +99,14 @@ class CotizacionController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $count = 0;
+
             $detallecotizacion = Detallecotizacion::where('IdCotizacion', $id)->get();
             $array = [];
             foreach ($detallecotizacion as $detalle) {
-
-                $detalleop = Detalleop::find($detalle->IDDetalleOrdenpedido);
-                array_push($array, $detalleop);
-                $array[$count]["IDProveedor"] = $detalle->IDProveedor;
-                $count++;
-
+                $detalleop = Detalleop::find($detalle->IDDetalleOrdenpedido)->join('ordenpedido as op', 'op.ID', 'detalleop.IdOPedido')->select('detalleop.*', 'op.Observacion as OrdenPedido')->get();
+                //array_push($array, $detalleop);
             }
-            return response()->json($array, 200);
+            return response()->json($detalleop, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -168,8 +164,9 @@ class CotizacionController extends Controller
                 ->attach($file2->store("xlsx", false, true)['full']);
 
         });
-        
+
         return response()->json(true, 200);
 
     }
+
 }
