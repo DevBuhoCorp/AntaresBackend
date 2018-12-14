@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Areacolab;
 use App\Models\Cotizacion;
 use App\Models\Detallecotizacion;
+use App\Models\Detallecotizacionproveedor;
 use App\Models\Detalleop;
 use App\Models\Ordenpedido;
 use Carbon\Carbon;
@@ -150,20 +151,36 @@ class CotizacionController extends Controller
     {
         $cotizacion = Cotizacion::find($request->input('cotizacion'));
         $cotizacion->Estado = "ENV";
-        $cotizacion->save();
+        $cotizacion->save(); 
+
+        $detallecot = Detallecotizacion::where('IDCotizacion', $cotizacion->ID)->get();
+        $data = array();
+        foreach ($detallecot as $detalle) {
+            foreach ($request->input('proveedor') as $proveedor) {
+                $bandera = Detallecotizacionproveedor::where('IDDetallecotizacion', $detalle->ID)->where('IDProveedor', $proveedor)->get();
+                if (count($bandera) == 0) {
+                    $detalleprov = new Detallecotizacionproveedor();
+                    $detalleprov->IDDetallecotizacion = $detalle->ID;
+                    $detalleprov->IDProveedor = $proveedor;
+                    $detalleprov->save();
+                }
+
+            }
+        }
 
         ExportController::exportCotizacion($request->input('cotizacion'));
+       // ExportController::exportRespuesta($request->input('cotizacion'));
         $data = array('mensaje' => $request->input('message'));
         Mail::send('cotizacion', $data, function ($message) use ($request) {
-            $file1 = Excel::load('storage/exports/Cotizacion.xlsx');
-            $file2 = Excel::load('app/Files/Respuesta.xlsx');
+        $file1 = Excel::load('storage/exports/Cotizacion.xlsx');
+        $file2 = Excel::load('storage/exports/Respuesta.xlsx');
 
-            $message->to($request->input('to'))
-                ->subject($request->input('subject'))
-                ->attach($file1->store("xlsx", false, true)['full'])
-                ->attach($file2->store("xlsx", false, true)['full']);
+        $message->to($request->input('to'))
+        ->subject($request->input('subject'))
+        ->attach($file1->store("xlsx", false, true)['full'])
+        ->attach($file2->store("xlsx", false, true)['full']);
 
-        });
+        }); 
 
         return response()->json(true, 200);
 

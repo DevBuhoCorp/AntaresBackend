@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
+use App\Models\Detallecotizacion;
+use App\Models\Detallecotizacionproveedor;
+use Illuminate\Support\Facades\DB;
 
 class ProveedorController extends Controller
 {
@@ -12,6 +15,23 @@ class ProveedorController extends Controller
         try {
             
                 $Proveedor = Proveedor::where('Estado','ACT')->get(['ID','RazonSocial as Etiqueta','Email']);
+                return response()->json($Proveedor, 200);
+            
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    public function combocotprov($cotizacion)
+    {
+        try {
+                $detalles = Detallecotizacionproveedor::join('detallecotizacion as dc','dc.ID','detallecotizacionproveedor.IDDetallecotizacion')
+                ->join('cotizacion as c','c.ID','dc.IDCotizacion')
+                ->where('c.ID',$cotizacion)
+                ->select('detallecotizacionproveedor.IDProveedor')
+                ->get();
+
+                $Proveedor = Proveedor::whereIn('ID', $detalles)->get(['ID','RazonSocial as Etiqueta']);
                 return response()->json($Proveedor, 200);
             
         } catch (ModelNotFoundException $e) {

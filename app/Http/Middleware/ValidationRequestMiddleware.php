@@ -16,11 +16,11 @@ class ValidationRequestMiddleware
     public function handle($request, Closure $next)
     {
         // Pre-Middleware Action
-        if ($request->isJson()) {
+       // if ($request->isJson()) {
             $response = $next($request);
             // Post-Middleware Action
             return $response;
-        }
+       // }
         return response()->json(['error' => 'Type Not valid'], 401);
     }
 }
