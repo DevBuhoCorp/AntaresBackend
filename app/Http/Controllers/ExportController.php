@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PHPUnit\Framework\Exception;
+use App\Models\Cotizacionproveedor;
+use Carbon\Carbon;
+use App\Models\Areacolab;
 
 class ExportController extends Controller
 {
@@ -19,11 +22,12 @@ class ExportController extends Controller
             if (true) {
 
                 $opedidos = Detalleop::join('detallecotizacion as dc', 'dc.IDDetalleOrdenPedido', 'detalleop.ID')
+                    ->join('detallecotizacionproveedor as dp', 'dc.ID', 'dp.IDDetallecotizacion')
                     ->join('cotizacion as c', 'dc.IDCotizacion', 'c.ID')
                     ->join('areacolab as ac', 'c.IDAreaColab', 'ac.ID')
                     ->join('colaborador as cl', 'ac.IdColaborador', 'cl.ID')
                     ->where('c.ID', $cotizacion)
-                    ->select('detalleop.*', 'c.FechaIni', 'c.FechaFin', DB::raw("concat(cl.NombrePrimero, ' ', cl.NombreSegundo, ' ', cl.ApellidoPaterno, ' ', cl.ApellidoMaterno) as Colaborador"))->get();
+                    ->select('detalleop.*', 'c.FechaIni', 'c.FechaFin', DB::raw("concat(cl.NombrePrimero, ' ', cl.NombreSegundo, ' ', cl.ApellidoPaterno, ' ', cl.ApellidoMaterno) as Colaborador"), 'dp.Referencia')->get();
 
                 Excel::load('app/Files/Cotizacion.xlsx', function ($reader) use ($opedidos) {
 
@@ -48,10 +52,9 @@ class ExportController extends Controller
                     $sheet = $reader->getActiveSheet();
                     $row = 2;
                     foreach ($opedidos as $opedido) {
-                        
-                        $sheet->setCellValue('A' . $row, $opedido->Etiqueta);
+                        $sheet->setCellValue('A' . $row, $opedido->Referencia);
+                        $sheet->setCellValue('B' . $row, $opedido->Etiqueta);
                         $row++;
-
                     }
 
                 })->store('xlsx');
@@ -68,7 +71,31 @@ class ExportController extends Controller
         try {
             $detallescot = Detallecotizacion::where('IDCotizacion', $request->input('IDCotizacion'))->select('ID')->get();
             $errors = "";
-            Excel::load($request->file('file')->getRealPath(), function ($reader) use ($detallescot, &$errors, $request) {
+            $areacolab = Areacolab::join('colaborador as c', 'c.ID', 'areacolab.IdColaborador')
+                ->where('c.IDUsers', $request->user()->id)
+                ->first(['areacolab.ID']);
+
+            $cotproveedor = Cotizacionproveedor::where('IDCotizacion', $request->input('IDCotizacion'))->where('IDProveedor', $request->input('IDProveedor'))->first();
+          
+            if ($cotproveedor) {
+                $cotproveedor->IDAreaColab = $areacolab->ID;
+                $cotproveedor->IDCotizacion = $request->input('IDCotizacion');
+                $cotproveedor->IDProveedor = $request->input('IDProveedor');
+                $cotproveedor->FechaReg = Carbon::now('America/Guayaquil');
+                $cotproveedor->Archivo = $request->input('Nombre');
+                $cotproveedor->save();
+            } else {
+                $cotproveedor = new Cotizacionproveedor();
+                $cotproveedor->IDAreaColab = $areacolab->ID;
+                $cotproveedor->IDCotizacion = $request->input('IDCotizacion');
+                $cotproveedor->IDProveedor = $request->input('IDProveedor');
+                $cotproveedor->FechaReg = Carbon::now('America/Guayaquil');
+                $cotproveedor->Archivo = $request->input('Nombre');
+                $cotproveedor->save();
+            }
+
+
+            Excel::load($request->file('file'), function ($reader) use ($detallescot, &$errors, $request) {
                 $excel = $reader->get();
 
                 for ($i = 0; $i < count($detallescot); $i++) {
@@ -77,9 +104,10 @@ class ExportController extends Controller
 
                         if ($excel[$i]->cantidad && $excel[$i]->precio) {
                             $detalle = new Detallecotizacionproveedor();
-                            $detalle = Detallecotizacionproveedor::where('IDDetallecotizacion', $detallescot[$i]->ID)->where('IDProveedor', $request->input('IDProveedor'))->first();
+                            $detalle = Detallecotizacionproveedor::where('IDDetallecotizacion', $detallescot[$i]->ID)->where('IDProveedor', $request->input('IDProveedor'))->where('Referencia', $excel[$i]->ref)->first();
                             $detalle->Cantidad = $excel[$i]->cantidad;
                             $detalle->Precio = $excel[$i]->precio;
+                            $detalle->Etiqueta = $excel[$i]->descripcion;
                             $detalle->Estado = 'BRR';
                             $detalle->save();
                             DB::commit();

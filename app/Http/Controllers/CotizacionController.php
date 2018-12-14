@@ -161,8 +161,11 @@ class CotizacionController extends Controller
                 if (count($bandera) == 0) {
                     $detalleprov = new Detallecotizacionproveedor();
                     $detalleprov->IDDetallecotizacion = $detalle->ID;
-                    $detalleprov->IDProveedor = $proveedor;
+                    $detalleprov->IDProveedor = $proveedor;                   
                     $detalleprov->save();
+                    $detalleprov->Referencia = 'COT'.str_random(3).$detalleprov->ID;
+                    $detalleprov->save();
+                    
                 }
 
             }

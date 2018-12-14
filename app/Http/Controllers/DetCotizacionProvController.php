@@ -21,15 +21,15 @@ class DetCotizacionProvController extends Controller
                 $detallescot = Detallecotizacion::where('IDCotizacion', $request->input('IDCotizacion'))->select('ID')->get();
                 $detallesprov = [];
                 for ($i = 0; $i < count($detallescot); $i++) {
-                            $detalle = new Detallecotizacionproveedor();
-                            $detalle =  Detallecotizacionproveedor::join('detallecotizacion as dc', 'IDDetallecotizacion', '=', 'dc.ID')
-                            ->join('detalleop as op', 'dc.IDDetalleOrdenpedido', '=', 'op.ID')
-                            ->where('detallecotizacionproveedor.IDProveedor',$request->input('IDProveedor'))
-                            ->where('detallecotizacionproveedor.IDDetallecotizacion',$detallescot[$i]->ID)
-                            ->select('op.Etiqueta', 'detallecotizacionproveedor.Cantidad','detallecotizacionproveedor.Precio')
-                            ->first();
-                            array_push($detallesprov,$detalle);
-                }                
+                    $detalle = new Detallecotizacionproveedor();
+                    $detalle = Detallecotizacionproveedor::join('detallecotizacion as dc', 'IDDetallecotizacion', '=', 'dc.ID')
+                        ->join('detalleop as op', 'dc.IDDetalleOrdenpedido', '=', 'op.ID')
+                        ->where('detallecotizacionproveedor.IDProveedor', $request->input('IDProveedor'))
+                        ->where('detallecotizacionproveedor.IDDetallecotizacion', $detallescot[$i]->ID)
+                        ->select('detallecotizacionproveedor.ID', 'detallecotizacionproveedor.Etiqueta', 'op.Cantidad as CantidadDeseada', 'detallecotizacionproveedor.Cantidad', 'detallecotizacionproveedor.Precio')
+                        ->first();
+                    array_push($detallesprov, $detalle);
+                }
                 return response()->json($detallesprov, 200);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -56,7 +56,23 @@ class DetCotizacionProvController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            if ($request->isJson()) {
+                foreach ($request->all() as $detalle) {
+                    
+                        $upd = Detallecotizacionproveedor::find($detalle["ID"]);
+                        $upd->fill($detalle);
+                        $upd->save();
+                    
+                    }
+
+                }
+                return response()->json($upd, 200);
+            
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**
@@ -88,9 +104,9 @@ class DetCotizacionProvController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+       
     }
 
     /**

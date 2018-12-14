@@ -42,7 +42,9 @@ class Detallecotizacionproveedor extends Eloquent
 		'IDProveedor',
 		'Cantidad',
 		'Precio',
-		'Estado'
+		'Referencia',
+		'Estado',
+		'Etiqueta'
 	];
 
 	public function detallecotizacion()
