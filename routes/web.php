@@ -31,6 +31,24 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->delete('area/{id}', ['uses' => 'AreaController@destroy']);
     #endregion
 
+    #region Condiciones de Pago
+    $router->get('condicionespago', ["uses" => "CondicionesPagoController@index"]);
+    $router->get('condicionespago/{id}', ['uses' => 'CondicionesPagoController@show']);
+    $router->post('condicionespago', ['uses' => 'CondicionesPagoController@store']);
+    $router->put('condicionespago/{id}', ['uses' => 'CondicionesPagoController@update']);
+    $router->delete('condicionespago/{id}', ['uses' => 'CondicionesPagoController@destroy']);
+    $router->get('condiciones_combo', ["uses" => "CondicionesPagoController@combo"]);
+    #endregion
+
+    #region Modos de Pago
+    $router->get('modospago', ["uses" => "ModoPagoController@index"]);
+    $router->get('modospago/{id}', ['uses' => 'ModoPagoController@show']);
+    $router->post('modospago', ['uses' => 'ModoPagoController@store']);
+    $router->put('modospago/{id}', ['uses' => 'ModoPagoController@update']);
+    $router->delete('modospago/{id}', ['uses' => 'ModoPagoController@destroy']);
+    $router->get('modospago_combo', ["uses" => "ModoPagoController@combo"]);
+    #endregion
+
     #region Pais
     $router->get('pais', ["uses" => "PaisController@index"]);
     $router->get('pais_combo', ["uses" => "PaisController@combo"]);
@@ -110,6 +128,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->get('proveedor', ["uses" => "ProveedorController@index"]);
     $router->get('proveedorcombo', ["uses" => "ProveedorController@combo"]);
     $router->get('combocotprov/{cotizacion}', ["uses" => "ProveedorController@combocotprov"]);
+    $router->get('comboocompra/{cantidad}', ["uses" => "ProveedorController@comboOCompra"]);
     $router->get('proveedor/{id}', ['uses' => 'ProveedorController@show']);
     $router->post('proveedor', ['uses' => 'ProveedorController@store']);
     $router->put('proveedor/{id}', ['uses' => 'ProveedorController@update']);
@@ -231,6 +250,15 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     $router->post('detallecotizacionprov', ['uses' => 'DetCotizacionProvController@store']);
     $router->delete('detallecotizacionprov/{id}', ['uses' => 'DetCotizacionProvController@destroy']);
     #endregion
+
+     #region OrdenCompra
+     $router->get('ordencompra', ['uses' => 'OrdenCompraController@index']);
+     $router->get('ordencompra/{id}', ['uses' => 'OrdenCompraController@show']);
+     $router->put('ordencompra/{id}', ['uses' => 'OrdenCompraController@update']);
+     $router->post('ordencompra', ['uses' => 'OrdenCompraController@store']);
+     $router->delete('ordencompra/{id}', ['uses' => 'OrdenCompraController@destroy']);
+     $router->get('ordencompraitems', ['uses' => 'OrdenCompraController@itemscompra']);
+     #endregion
 
     #region Movimientos
     $router->get('bodega_productos/{bodega}', ["uses" => "MovimientoController@bodega_producto"]);

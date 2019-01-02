@@ -21,7 +21,7 @@ class BodegaController extends Controller
             $Bodega = Bodega::
                             join('Ciudad', 'Ciudad.ID', 'IDCiudad')
                             ->join('Pais', 'Pais.ID', 'Ciudad.IDPais')
-                            ->select([ 'Bodega.*', DB::raw("concat(Ciudad.Descripcion, ' - ', Pais.Descripcion) as Ciudad") ])
+                            ->select([ 'Bodega.*', ("concat(Ciudad.Descripcion, ' - ', PDB::rawais.Descripcion) as Ciudad") ])
                             ->paginate($request->input('psize'));
             return response()->json($Bodega, 200);
         } catch (ModelNotFoundException $e) {

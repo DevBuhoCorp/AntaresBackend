@@ -2,21 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Detallecotizacionproveedor;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
-use App\Models\Detallecotizacion;
-use App\Models\Detallecotizacionproveedor;
-use Illuminate\Support\Facades\DB;
 
 class ProveedorController extends Controller
 {
     public function combo()
     {
         try {
+
+            $Proveedor = Proveedor::where('Estado', 'ACT')->get(['ID', 'RazonSocial as Etiqueta', 'Email']);
+            return response()->json($Proveedor, 200);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+
+    public function comboOCompra($cantidad)
+    {
+        try {
             
-                $Proveedor = Proveedor::where('Estado','ACT')->get(['ID','RazonSocial as Etiqueta','Email']);
-                return response()->json($Proveedor, 200);
             
+             $Proveedor = Detallecotizacionproveedor::join('proveedor as p', 'IDProveedor', 'p.ID')
+                ->orderBy('IDProveedor', 'desc')
+                ->groupBy('IDProveedor')
+                ->havingRaw('COUNT(IDProveedor) >= ' . $cantidad)
+                ->select('p.ID', 'p.RazonSocial')
+                ->get(); 
+
+                
+                
+            return response()->json($Proveedor, 200);
+
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -25,15 +44,15 @@ class ProveedorController extends Controller
     public function combocotprov($cotizacion)
     {
         try {
-                $detalles = Detallecotizacionproveedor::join('detallecotizacion as dc','dc.ID','detallecotizacionproveedor.IDDetallecotizacion')
-                ->join('cotizacion as c','c.ID','dc.IDCotizacion')
-                ->where('c.ID',$cotizacion)
+            $detalles = Detallecotizacionproveedor::join('detallecotizacion as dc', 'dc.ID', 'detallecotizacionproveedor.IDDetallecotizacion')
+                ->join('cotizacion as c', 'c.ID', 'dc.IDCotizacion')
+                ->where('c.ID', $cotizacion)
                 ->select('detallecotizacionproveedor.IDProveedor')
                 ->get();
 
-                $Proveedor = Proveedor::whereIn('ID', $detalles)->get(['ID','RazonSocial as Etiqueta']);
-                return response()->json($Proveedor, 200);
-            
+            $Proveedor = Proveedor::whereIn('ID', $detalles)->get(['ID', 'RazonSocial as Etiqueta']);
+            return response()->json($Proveedor, 200);
+
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -49,11 +68,11 @@ class ProveedorController extends Controller
         try {
             if ($request->isJson()) {
                 $Proveedor = Proveedor::
-                        join('TipoEmisor', 'IdTipoEmisor', 'TipoEmisor.ID')
-                        ->join('Contribuyente', 'IdContribuyente', 'Contribuyente.ID')
-                        ->join('TipoIdentificacion', 'IdTipoIdentificacion', 'TipoIdentificacion.ID')
-                        ->select([ 'Proveedor.*', 'Contribuyente.Descripcion as Contribuyente', 'TipoIdentificacion.Descripcion as TIdentificacion', 'TipoEmisor.Descripcion as TEmisor' ])
-                        ->paginate($request->input('psize'));
+                    join('TipoEmisor', 'IdTipoEmisor', 'TipoEmisor.ID')
+                    ->join('Contribuyente', 'IdContribuyente', 'Contribuyente.ID')
+                    ->join('TipoIdentificacion', 'IdTipoIdentificacion', 'TipoIdentificacion.ID')
+                    ->select(['Proveedor.*', 'Contribuyente.Descripcion as Contribuyente', 'TipoIdentificacion.Descripcion as TIdentificacion', 'TipoEmisor.Descripcion as TEmisor'])
+                    ->paginate($request->input('psize'));
                 return response()->json($Proveedor, 200);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
