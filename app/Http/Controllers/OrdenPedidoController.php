@@ -117,11 +117,12 @@ class OrdenPedidoController extends Controller
                 $opedido->IDAreaColab = $areacolab->ID;
 
                 $opedido->save();
-                foreach ($request->all()['Detalles'] as $detalle) {
+                $opedido->detalleops()->createMany($request->all()['Detalles']);
+               /*  foreach ($request->all()['Detalles'] as $detalle) {
                     $detalle = new Detalleop($detalle);
                     $detalle->IdOPedido = $opedido->ID;
                     $detalle->save();
-                }
+                } */
 
                 return response()->json(true, 201);
             }

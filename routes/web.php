@@ -142,11 +142,18 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
 
     #region Items
     $router->get('items', ["uses" => "ItemController@index"]);
-    $router->get('autocompleteitems', ["uses" => "ItemController@autocomplete"]);
     $router->get('items/{id}', ['uses' => 'ItemController@show']);
     $router->post('items', ['uses' => 'ItemController@store']);
     $router->put('items/{id}', ['uses' => 'ItemController@update']);
     $router->delete('items/{id}', ['uses' => 'ItemController@destroy']);
+    #endregion
+
+    #region Productos
+    $router->get('productos', ["uses" => "ProductoController@index"]);
+    $router->get('productos/{id}', ['uses' => 'ProductoController@show']);
+    $router->post('productos', ['uses' => 'ProductoController@store']);
+    $router->put('productos/{id}', ['uses' => 'ProductoController@update']);
+    $router->delete('productos/{id}', ['uses' => 'ProductoController@destroy']);
     #endregion
 
     #region Orden de Pedido
