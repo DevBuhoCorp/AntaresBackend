@@ -93,15 +93,12 @@ class ExportController extends Controller
                 $cotproveedor->Archivo = $request->input('Nombre');
                 $cotproveedor->save();
             }
-
-
+            
             Excel::load($request->file('file'), function ($reader) use ($detallescot, &$errors, $request) {
                 $excel = $reader->get();
-
                 for ($i = 0; $i < count($detallescot); $i++) {
                     try {
                         DB::beginTransaction();
-
                         if ($excel[$i]->cantidad && $excel[$i]->precio) {
                             $detalle = new Detallecotizacionproveedor();
                             $detalle = Detallecotizacionproveedor::where('IDDetallecotizacion', $detallescot[$i]->ID)->where('IDProveedor', $request->input('IDProveedor'))->where('Referencia', $excel[$i]->ref)->first();

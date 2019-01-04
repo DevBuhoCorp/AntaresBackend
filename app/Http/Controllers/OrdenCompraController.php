@@ -76,7 +76,7 @@ class OrdenCompraController extends Controller
                 $ordencompra->IDCondicionPago = $request->input('IDCondicionPago');
                 $ordencompra->save();
                 $ordencompra->detalleordencompras()->createMany($request->all()['Detalles']);
-                $detalleprov = Detallecotizacionproveedor::find($request->all()['IDCotProv']);
+                $detalleprov = Detallecotizacionproveedor::find($request->all()['IDCotProv']); 
                 $detalleprov->Estado = "BRR";
                 $detalleprov->each(function ($detalle) {
                     $detalle->Estado = "ACT";

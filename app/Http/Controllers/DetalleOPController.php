@@ -73,11 +73,12 @@ class DetalleOPController extends Controller
         try {
             if ($request->isJson()) {
                 foreach ($request->all() as $detalle) {
-                    if($detalle["ID"]){
+                    //return $detalle["ID"];
+                    try{
                         $upd = Detalleop::find($detalle["ID"]);
                         $upd->fill($detalle);
                         $upd->save();
-                    } else {
+                    } catch(\Exception $e) {
                         $detalle = new Detalleop($detalle);
                         $detalle->IdOPedido = $id;
                         $detalle->save();
