@@ -99,7 +99,12 @@ class OrdenCompraController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $items = Ordencompra::find($id);
+            return response()->json($items->detalleordencompras, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => $e], 500);
+        }
     }
 
     /**
