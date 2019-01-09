@@ -8,6 +8,8 @@ use App\Models\Ordencompra;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Detalleop;
+use App\Models\Presupuesto;
 
 
 class OrdenCompraController extends Controller
@@ -76,6 +78,12 @@ class OrdenCompraController extends Controller
                 $ordencompra->IDCondicionPago = $request->input('IDCondicionPago');
                 $ordencompra->save();
                 $ordencompra->detalleordencompras()->createMany($request->all()['Detalles']);
+                foreach ($ordencompra->detalleordencompras as &$detalle) {
+                    $detalleordenpedido = Detalleop::find($detalle->IDDetalleordenpedido);
+                    $presupuesto = Presupuesto::where('IDDepartamento',$detalleordenpedido->ordenpedido->areacolab->area->departamento->ID)->where('Anio',$detalleordenpedido->ordenpedido->FechaRegistro->year)->first();
+                    $presupuesto->OPedido = $presupuesto->OCompra = $presupuesto->OCompra + $detalle->Cantidad * $detalle->Precio;
+                    $presupuesto->save();
+                }
                 $detalleprov = Detallecotizacionproveedor::find($request->all()['IDCotProv']); 
                 $detalleprov->Estado = "BRR";
                 $detalleprov->each(function ($detalle) {
@@ -102,6 +110,8 @@ class OrdenCompraController extends Controller
         try {
             $items = Ordencompra::find($id);
             return response()->json($items->detalleordencompras, 200);
+           
+            
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -150,7 +160,7 @@ class OrdenCompraController extends Controller
                 ->join('ordenpedido as op', 'op.ID', 'dop.IdOPedido')
                 ->where('detallecotizacionproveedor.IDProveedor', $request->input('IDProveedor'))
                 ->where('detallecotizacionproveedor.Estado', $request->input('Estado'))
-                ->select('detallecotizacionproveedor.ID', 'c.Observacion as Cotizacion', 'detallecotizacionproveedor.Etiqueta as Descripcion', 'detallecotizacionproveedor.Cantidad', 'detallecotizacionproveedor.Precio', 'op.Observacion as OrdenPedido', 'op.ID as IDDetalleordenpedido')
+                ->select('detallecotizacionproveedor.ID', 'c.Observacion as Cotizacion', 'detallecotizacionproveedor.Etiqueta as Descripcion', 'detallecotizacionproveedor.Cantidad', 'detallecotizacionproveedor.Precio', 'op.Observacion as OrdenPedido', 'dop.ID as IDDetalleordenpedido')
                 ->get();
 
             return response()->json($items, 200);

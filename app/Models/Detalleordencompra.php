@@ -51,4 +51,9 @@ class Detalleordencompra extends Eloquent
 	{
 		return $this->belongsTo(\App\Models\Ordencompra::class, 'IDOrdencompra');
 	}
+
+	public function detalleopedido()
+	{
+		return $this->belongsTo(\App\Models\Detalleop::class, 'IDDetalleordenpedido');
+	}
 }

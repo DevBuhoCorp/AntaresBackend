@@ -51,4 +51,5 @@ class Detalleop extends Eloquent
 	{
 		return $this->belongsTo(\App\Models\Ordenpedido::class, 'IdOPedido');
 	}
+	
 }

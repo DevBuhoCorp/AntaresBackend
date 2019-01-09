@@ -24,7 +24,7 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades(true, [
-    'Maatwebsite\Excel\Facades\Excel' =>'Excel'
+    'Maatwebsite\Excel\Facades\Excel' =>'Excel',
 ]);
 
  $app->withEloquent();
