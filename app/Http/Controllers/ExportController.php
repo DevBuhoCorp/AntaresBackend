@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Areacolab;
+use App\Models\Cotizacionproveedor;
 use App\Models\Detallecotizacion;
 use App\Models\Detallecotizacionproveedor;
 use App\Models\Detalleop;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PHPUnit\Framework\Exception;
-use App\Models\Cotizacionproveedor;
-use Carbon\Carbon;
-use App\Models\Areacolab;
+use App\Models\Detalleordencompra;
 
 class ExportController extends Controller
 {
@@ -76,7 +79,7 @@ class ExportController extends Controller
                 ->first(['areacolab.ID']);
 
             $cotproveedor = Cotizacionproveedor::where('IDCotizacion', $request->input('IDCotizacion'))->where('IDProveedor', $request->input('IDProveedor'))->first();
-          
+
             if ($cotproveedor) {
                 $cotproveedor->IDAreaColab = $areacolab->ID;
                 $cotproveedor->IDCotizacion = $request->input('IDCotizacion');
@@ -93,7 +96,7 @@ class ExportController extends Controller
                 $cotproveedor->Archivo = $request->input('Nombre');
                 $cotproveedor->save();
             }
-            
+
             Excel::load($request->file('file'), function ($reader) use ($detallescot, &$errors, $request) {
                 $excel = $reader->get();
                 for ($i = 0; $i < count($detallescot); $i++) {
@@ -130,4 +133,19 @@ class ExportController extends Controller
             return response()->json(['error' => $e], 500);
         }
     }
+
+    public function pdfOCompra($idocompra)
+    {
+        set_time_limit(300);
+        $detalles = Detalleordencompra::where('IDOrdencompra',$idocompra)->get();
+        $pdf = PDF::loadView('ordencompra',array('detalles' => $detalles ));
+       
+        return $pdf->stream('ordencompra.pdf');
+       /*  $detalles = Detalleordencompra::where('IDOrdencompra',$idocompra);
+        return View::make('home.home')
+            ->with('questions', $questions); */
+    
+        //return view('ordencompra',array('detalles' => $detalles ));
+    }
+
 }

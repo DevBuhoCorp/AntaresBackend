@@ -33,7 +33,9 @@ class Ordencompra extends Eloquent
 
 	protected $casts = [
 		'IDProveedor' => 'int',
-		'IDAreaColab' => 'int'
+		'IDAreaColab' => 'int',
+		'IDModoPago' => 'int',
+		'IDCondicionPago' => 'int'
 	];
 
 	protected $dates = [
@@ -47,12 +49,24 @@ class Ordencompra extends Eloquent
 		'IDProveedor',
 		'IDAreaColab',
 		'FechaEntrega',
-		'Observacion'
+		'Observacion',
+		'IDModoPago',
+		'IDCondicionPago'
 	];
 
 	public function proveedor()
 	{
-		return $this->belongsTo(\App\Models\Proveedor::class, 'IDProveedor');
+		return $this->belongsTo(\App\Models\Proveedor::class, 'IDModoPago');
+	}
+
+	public function modopago()
+	{
+		return $this->belongsTo(\App\Models\Modospago::class, 'IDModoPago');
+	}
+
+	public function condicionpago()
+	{
+		return $this->belongsTo(\App\Models\Condicionespago::class, 'IDCondicionPago');
 	}
 
 	public function detalleordencompras()

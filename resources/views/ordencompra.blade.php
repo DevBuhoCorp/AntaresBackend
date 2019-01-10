@@ -1,90 +1,101 @@
+@php
+    $subtotal = 0;
+    $iva = 0;
+    $total = 0;
+@endphp
 <html>
   <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="{{ url('assets/css/style.css') }}">
+   <!--  <link rel="stylesheet" href="{{ url('assets/css/style.css') }}"> -->
+   <link rel="stylesheet" type="text/css" media="all" href="assets/css/style.css" />
+   <style type="text/css">
+/*<![CDATA[*/
+@page {
+     margin: 0;
+}
+/*]]>*/
+</style>
+
   </head>
   <body>
     <header class="clearfix">
       <div id="logo">
-        <img src="{{ url('assets/img/logo.png') }}">
+        <img src="assets/img/logo.png">
       </div>
-      <h1>COMPAÑIA</h1>
-      <div id="company" class="clearfix">
-        <div>Company Name</div>
-        <div>455 Foggy Heights,<br /> AZ 85004, US</div>
-        <div>(602) 519-0450</div>
-        <div><a href="mailto:company@example.com">company@example.com</a></div>
+      <h1>ORDEN DE COMPRA</h1>
+      <!-- <div id="company" class="clearfix">
+        <div>Emisor:</div>
+        <div>Cuerpo de Bomberos Municipal de Quevedo</div>
+        <div>Calle Bolívar y Tercera, <br /> Quevedo - Los Ríos</div>
+        <div>Emergencias ECU911 - Oficinas 052752176 - 052750331</div>
+        <div><a href="mailto:cbmqcentral@outlook.com">cbmqcentral@outlook.com</a></div>
       </div>
       <div id="project">
-        <div><span>PROJECT</span> Website development</div>
-        <div><span>CLIENT</span> John Doe</div>
-        <div><span>ADDRESS</span> 796 Silver Harbour, TX 79273, US</div>
-        <div><span>EMAIL</span> <a href="mailto:john@example.com">john@example.com</a></div>
-        <div><span>DATE</span> August 17, 2015</div>
-        <div><span>DUE DATE</span> September 17, 2015</div>
+        <div><span>PROVEEDOR: </span> {{$detalles[0]->ordencompra->proveedor->RazonSocial}}</div>
+        <div><span>DIRECCIÓN: </span> {{$detalles[0]->ordencompra->proveedor->Direccion}}</div>
+        <div><span>EMAIL: </span> <a href="{{$detalles[0]->ordencompra->proveedor->Email}}">{{$detalles[0]->ordencompra->proveedor->Email}}</a></div>
+        <div><span>FECHA: </span> {{Carbon\Carbon::now('America/Guayaquil')}}</div>
+        <div><span>FECHA PREVISTA DE ENTREGA: </span> {{$detalles[0]->ordencompra->FechaEntrega}}</div>
+      </div>-->
+
+      <div id="project">
+        <div><span>ORDEN DE COMPRA A : </span> {{$detalles[0]->ordencompra->proveedor->RazonSocial}}</div>
+        <div>{{$detalles[0]->ordencompra->proveedor->Direccion}}</div>
+      </div>
+
+      <div id="company" class="clearfix">
+      <div><span>FECHA: </span> {{Carbon\Carbon::today('America/Guayaquil')->toDateString()}}</div>
       </div>
     </header>
     <main>
-      <table>
+      <table >
         <thead>
           <tr>
-            <th class="service">SERVICE</th>
-            <th class="desc">DESCRIPTION</th>
-            <th>PRICE</th>
-            <th>QTY</th>
+            <th class="desc">DESCRIPCIÓN</th>
+            <th>CANTIDAD</th>
+            <th>PRECIO</th>
             <th>TOTAL</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="service">Design</td>
-            <td class="desc">Creating a recognizable design solution based on the company's existing visual identity</td>
-            <td class="unit">$40.00</td>
-            <td class="qty">26</td>
-            <td class="total">$1,040.00</td>
-          </tr>
-          <tr>
-            <td class="service">Development</td>
-            <td class="desc">Developing a Content Management System-based Website</td>
-            <td class="unit">$40.00</td>
-            <td class="qty">80</td>
-            <td class="total">$3,200.00</td>
-          </tr>
-          <tr>
-            <td class="service">SEO</td>
-            <td class="desc">Optimize the site for search engines (SEO)</td>
-            <td class="unit">$40.00</td>
-            <td class="qty">20</td>
-            <td class="total">$800.00</td>
-          </tr>
-          <tr>
-            <td class="service">Training</td>
-            <td class="desc">Initial training sessions for staff responsible for uploading web content</td>
-            <td class="unit">$40.00</td>
-            <td class="qty">4</td>
-            <td class="total">$160.00</td>
-          </tr>
-          <tr>
-            <td colspan="4">SUBTOTAL</td>
-            <td class="total">$5,200.00</td>
-          </tr>
-          <tr>
-            <td colspan="4">TAX 25%</td>
-            <td class="total">$1,300.00</td>
-          </tr>
-          <tr>
-            <td colspan="4" class="grand total">GRAND TOTAL</td>
-            <td class="grand total">$6,500.00</td>
-          </tr>
+        @foreach ($detalles as $detalle)
+        <tr>
+        <td class="desc">{{ $detalle->Descripcion }}</td>
+        <td class="qty">{{ $detalle->Cantidad }}</td>
+        <td class="unit">${{ $detalle->Precio }}</td>
+        <td class="total">${{ $detalle->Cantidad * $detalle->Precio }}</td>
+        {{ $subtotal += $detalle->Cantidad * $detalle->Precio }}
+        </tr>
+        @endforeach
+
+
+
         </tbody>
       </table>
+
+      <table >
+      <tbody>
+      <tr>
+            <td colspan="3">SUBTOTAL</td>
+            <td class="total">${{ $subtotal}}</td>
+          </tr>
+          <tr>
+            <td colspan="3">IVA 12%</td>
+            <td class="total">${{ $iva = $subtotal * 0.12 }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="grand total"> TOTAL</td>
+            <td class="grand total">${{$total = $subtotal + $iva}}</td>
+          </tr>
+          </tbody>
+</table>
       <div id="notices">
-        <div>NOTICE:</div>
-        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+        <div class="header"> Información de Pago:</div>
+        <div class="notice">Condiciones de pago: {{$detalles[0]->ordencompra->modopago->Etiqueta}}</div>
+        <div class="notice">Forma de pago: {{$detalles[0]->ordencompra->condicionpago->Etiqueta}}.</div>
       </div>
     </main>
     <footer>
-      Invoice was created on a computer and is valid without the signature and seal.
+          Antares. Buhocorp©
     </footer>
   </body>
 </html>

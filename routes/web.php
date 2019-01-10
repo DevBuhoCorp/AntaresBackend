@@ -14,11 +14,11 @@
 use Illuminate\Support\Facades\App;
 
 $router->get('/', function () use ($router) {
-    //return $router->app->version();
-    //return view('ordencompra');
-    $pdf = App::make('dompdf.wrapper');
+    return $router->app->version();
+   
+    /* $pdf = App::make('dompdf.wrapper');
     $pdf->loadView('ordencompra');
-    return $pdf->stream();
+    return $pdf->stream(); */
 });
 $router->post('cotizacionmail', ['uses' => 'CotizacionController@email']);
 
@@ -274,7 +274,7 @@ $router->group(['middleware' => ['auth', 'valid']], function () use ($router) {
     #endregion
 
 });
-
+$router->get('pdfocompra/{idocompra}', ["uses" => "ExportController@pdfOCompra"]);
 $router->get('/pdf', function () {
     $pdf = App::make('dompdf.wrapper');
     $pdf->loadHTML('<h1>Test</h1>');
